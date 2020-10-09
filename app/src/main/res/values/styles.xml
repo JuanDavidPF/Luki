@@ -1,0 +1,33 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/whiteLuki</item>
+        <item name="colorPrimaryDark">@color/violetLuki</item>
+        <item name="colorAccent">@color/salmonLuki</item>
+
+        <item name="android:windowFullscreen">true</item>
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:background">@color/whiteLuki</item>
+
+    </style>
+
+    <style name="ButtonMainBig" parent="Widget.AppCompat.Button">
+
+        <item name="android:drawableEnd">@drawable/tex_edit_arrow_right</item>
+        <item name="android:background">@drawable/btn_main_big</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/whiteLuki</item>
+        <item name="android:fontFamily">@font/poppins_medium</item>
+        <item name="android:textSize">14dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:textAlignment">textStart</item>
+        <item name="android:paddingStart">25dp</item>
+        <item name="android:paddingEnd">25dp</item>
+
+    </style>
+
+
+</resources>

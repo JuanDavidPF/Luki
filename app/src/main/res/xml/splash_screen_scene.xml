@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:motion="http://schemas.android.com/apk/res-auto">
+
+    <Transition
+        motion:autoTransition="animateToEnd"
+        motion:constraintSetEnd="@+id/end"
+        motion:constraintSetStart="@id/start"
+
+        motion:duration="5000">
+
+        <KeyFrameSet>
+            <KeyAttribute
+                android:scaleX="1.2"
+                motion:framePosition="10"
+                motion:motionTarget="@+id/splashScreen_imgView_logo" />
+            <KeyAttribute
+                android:scaleY="1.2"
+                motion:framePosition="10"
+                motion:motionTarget="@+id/splashScreen_imgView_logo" />
+            <KeyAttribute
+                android:alpha="1"
+                motion:framePosition="20"
+                motion:motionTarget="@+id/splashScreen_imgView_logo" />
+            <KeyPosition
+                motion:framePosition="40"
+                motion:motionTarget="@+id/splashScreen_imgView_logo"
+                motion:percentX="0"
+                motion:percentY="0" />
+            <KeyPosition
+                motion:framePosition="90"
+                motion:motionTarget="@+id/splashScreen_imgView_logo"
+                motion:percentX="0"
+                motion:percentY="0" />
+            <KeyAttribute
+                android:translationX="100dp"
+                motion:framePosition="80"
+                motion:motionTarget="@+id/splash_imgView_leaves"
+                motion:transitionEasing="accelerate" />
+            <KeyAttribute
+                android:translationY="-100dp"
+                motion:framePosition="80"
+                motion:motionTarget="@+id/splash_imgView_leaves"
+                motion:transitionEasing="accelerate" />
+            <KeyAttribute
+                motion:motionTarget="@id/splash_imgView_bigCloud"
+                motion:framePosition="65"
+                android:translationY="-300dp" />
+            <KeyAttribute
+                motion:motionTarget="@+id/splash_imgView_smallCloud"
+                motion:framePosition="50"
+                android:translationY="-220dp" />
+            <KeyAttribute
+                motion:motionTarget="@+id/splash_imgView_girl"
+                motion:framePosition="95"
+                android:translationX="-400dp" />
+            <KeyAttribute
+                motion:motionTarget="@+id/splash_imgView_girl"
+                motion:framePosition="95"
+                android:translationY="400dp" />
+            <KeyAttribute
+                motion:motionTarget="@+id/splash_btn_cta"
+                motion:framePosition="94"
+                android:alpha="0" />
+        </KeyFrameSet>
+    </Transition>
+
+    <ConstraintSet android:id="@+id/start">
+        <Constraint
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="match_parent"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="64dp"
+            android:layout_marginEnd="32dp"
+            android:alpha="0"
+            android:layout_marginStart="32dp"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:id="@+id/splash_btn_cta"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
+            android:layout_height="40dp" />
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/end">
+        <Constraint
+            android:id="@+id/splashScreen_imgView_logo"
+            android:layout_width="112dp"
+            android:layout_height="107dp"
+            android:alpha="1"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintHorizontal_bias="0.85"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toTopOf="parent"
+            motion:layout_constraintVertical_bias="0.45"
+            motion:layout_editor_absoluteY="277dp" />
+        <Constraint
+            android:id="@+id/splash_imgView_leaves"
+            android:layout_width="125dp"
+            android:layout_height="125dp"
+            android:translationX="25dp"
+            android:translationY="-25dp"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintTop_toTopOf="parent" />
+        <Constraint
+            android:id="@+id/splash_imgView_bigCloud"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="291dp"
+            android:layout_height="272dp"
+            android:translationY="-100dp"
+            motion:layout_constraintHorizontal_bias="1.0"
+            motion:layout_constraintTop_toTopOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:translationX="50dp" />
+        <Constraint
+            android:id="@+id/splash_imgView_smallCloud"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="244dp"
+            android:layout_height="215dp"
+            android:translationY="-150dp"
+            motion:layout_constraintHorizontal_bias="0.24"
+            motion:layout_constraintTop_toTopOf="parent"
+            motion:layout_constraintStart_toStartOf="parent" />
+        <Constraint
+            android:id="@+id/splash_imgView_girl"
+            android:layout_width="548dp"
+            android:layout_height="0dp"
+            android:translationX="-175dp"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            android:translationY="10dp"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="64dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginStart="0dp" />
+        <Constraint
+            android:id="@+id/splash_btn_cta"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="match_parent"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="64dp"
+            android:layout_marginEnd="32dp"
+            android:alpha="1"
+            android:layout_marginStart="32dp"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
+            android:layout_height="40dp" />
+    </ConstraintSet>
+</MotionScene>

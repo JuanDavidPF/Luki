@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+       app:layoutDescription="@xml/splash_screen_scene"
+    tools:context=".SplashScreen">
+
+    <ImageView
+        android:id="@+id/splash_imgView_leaves"
+        android:layout_width="95dp"
+        android:layout_height="85dp"
+        android:contentDescription="@string/noDescription"
+        android:src="@drawable/leaves"
+        android:translationX="100dp"
+        android:translationY="-100dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/splashScreen_imgView_logo"
+        android:layout_width="104dp"
+        android:layout_height="100dp"
+        android:alpha="0"
+        android:contentDescription="@string/noDescription"
+        android:scaleType="centerInside"
+        android:src="@drawable/logo_luki"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.45"
+        app:srcCompat="@drawable/logo_luki"
+        tools:srcCompat="@drawable/logo_luki" />
+
+    <ImageView
+        android:id="@+id/splash_imgView_smallCloud"
+        android:layout_width="244dp"
+        android:layout_height="215dp"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/noDescription"
+        android:src="@drawable/cloud"
+        android:translationY="-250dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.24"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/splash_imgView_bigCloud"
+        android:layout_width="291dp"
+        android:layout_height="272dp"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/noDescription"
+        android:src="@drawable/cloud"
+        android:translationX="50dp"
+        android:translationY="-300dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/splash_imgView_girl"
+        android:layout_width="500dp"
+        android:layout_height="618dp"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/noDescription"
+        android:src="@drawable/splashgirl"
+        android:translationX="-450dp"
+        android:translationY="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/splash_btn_cta"
+        style="@style/ButtonMainBig"
+        android:layout_width="match_parent"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="64dp"
+        android:alpha="0"
+        android:text="@string/splashPageCTAbtn"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.motion.widget.MotionLayout>
