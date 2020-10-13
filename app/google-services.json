@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "381741532640",
+    "firebase_url": "https://luki-33b79.firebaseio.com",
+    "project_id": "luki-33b79",
+    "storage_bucket": "luki-33b79.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:381741532640:android:c5685f360af23b8b519785",
+        "android_client_info": {
+          "package_name": "com.example.luki"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "381741532640-ksm2hnurqfinqu265frt36n0t2rc103j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_xo-Zbr1-s96mQbHKBE9ZtkVWOidt1Uw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "381741532640-ksm2hnurqfinqu265frt36n0t2rc103j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
