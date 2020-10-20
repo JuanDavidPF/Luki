@@ -16,7 +16,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -40,6 +39,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.UUID;
 
 public class newProduct extends AppCompatActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener {
@@ -48,13 +48,13 @@ public class newProduct extends AppCompatActivity implements AdapterView.OnItemS
     private DatabaseReference mDatabase;
     private StorageReference mStorageRef;
 
-    private Spinner categoriesInput;
+    private ArrayList<Uri> productPictures;
+    private int photosUploaded = 0;
     private File file;
     private int numberOfPhotos = 0;
     private ImageButton[] addPhoto;
     public static final int PERMISSIONS_CALLBACK = 153;
     public static final int CAMERA_CALLBACK = 921;
-    private Button btnAdd;
 
     private EditText productNameField;
     private EditText productDescriptionField;
@@ -63,10 +63,16 @@ public class newProduct extends AppCompatActivity implements AdapterView.OnItemS
     private String productName;
     private String productDescription;
     private float productPrice;
+
+    private Spinner categoriesInput;
     private String productCategory;
 
-    private ArrayList<Uri> productPictures;
+    private Button btnAdd;
 
+    private String sellerID;
+    private String productId;
+
+    private Product product;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,8 +82,8 @@ public class newProduct extends AppCompatActivity implements AdapterView.OnItemS
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mStorageRef = FirebaseStorage.getInstance().getReference();
-
         productPictures = new ArrayList<Uri>();
+
 
         categoriesInput = findViewById(R.id.newProduct_spinner_categories);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.categories_array, android.R.layout.simple_spinner_item);
@@ -86,37 +92,20 @@ public class newProduct extends AppCompatActivity implements AdapterView.OnItemS
         categoriesInput.setAdapter(adapter);
         categoriesInput.setOnItemSelectedListener(this);
 
+
         addPhoto = new ImageButton[6];
-        for (int i = 0; i < addPhoto.length; i++) {
-            int tag = 0;
-            switch (i) {
-                case 0:
-                    tag = R.id.newProduct_imgBtn_1;
-                    break;
-                case 1:
-                    tag = R.id.newProduct_imgBtn_2;
-
-                    break;
-                case 2:
-                    tag = R.id.newProduct_imgBtn_3;
-
-                    break;
-                case 3:
-                    tag = R.id.newProduct_imgBtn_4;
-
-                    break;
-                case 4:
-                    tag = R.id.newProduct_imgBtn_5;
-
-                    break;
-                case 5:
-                    tag = R.id.newProduct_imgBtn_6;
-                    break;
-            }
-
-            addPhoto[i] = findViewById(tag);
-            addPhoto[i].setOnClickListener(this);
-        }
+        addPhoto[0] = findViewById(R.id.newProduct_imgBtn_1);
+        addPhoto[0].setOnClickListener(this);
+        addPhoto[1] = findViewById(R.id.newProduct_imgBtn_2);
+        addPhoto[1].setOnClickListener(this);
+        addPhoto[2] = findViewById(R.id.newProduct_imgBtn_3);
+        addPhoto[2].setOnClickListener(this);
+        addPhoto[3] = findViewById(R.id.newProduct_imgBtn_4);
+        addPhoto[3].setOnClickListener(this);
+        addPhoto[4] = findViewById(R.id.newProduct_imgBtn_5);
+        addPhoto[4].setOnClickListener(this);
+        addPhoto[5] = findViewById(R.id.newProduct_imgBtn_6);
+        addPhoto[5].setOnClickListener(this);
 
 
         productNameField = findViewById(R.id.newProduct_et_name);
@@ -136,18 +125,16 @@ public class newProduct extends AppCompatActivity implements AdapterView.OnItemS
         } else {
             productCategory = adapterView.getItemAtPosition(i).toString().toLowerCase();
         }
-
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
+        productCategory = "";
     }
-
 
     private void takePicture() {
 
         if (numberOfPhotos < 6) {
-
             Intent takePhoto = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             file = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES) + "/photo.png");
             Uri uri = FileProvider.getUriForFile(this, getPackageName(), file);
@@ -157,33 +144,31 @@ public class newProduct extends AppCompatActivity implements AdapterView.OnItemS
         } else {
             Toast.makeText(this.getApplicationContext(), "Ya has llegado al limite de fotos por producto", Toast.LENGTH_LONG);
         }
-    }
+    }//closes takePicture method
 
     @Override
     public void onClick(View view) {
 
-        if (view.getId() == R.id.newProduct_btn_add) {
-
-            getProductData();
-
-            if (!productName.isEmpty() && !productDescription.isEmpty() && !productCategory.isEmpty() && productPrice + "".length() > 0 && productPictures.size() > 0) {
-
-                uploadProduct();
-            } else
-                Toast.makeText(this.getApplicationContext(), "Por favor llene todos los campos", Toast.LENGTH_LONG).show();
-
-
-        } else if (view.getId() != R.id.newProduct_btn_add) {
-            ActivityCompat.requestPermissions(this, new String[]{
-                    Manifest.permission.CAMERA,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSIONS_CALLBACK);
-        }
 
         switch (view.getId()) {
 
+            case R.id.newProduct_btn_add:
+
+                if (getProductData()) {
+                    deactivateButtons();
+                    uploadProduct();
+                }
+
+                break;
+
             case R.id.newProduct_imgBtn_1:
                 if (numberOfPhotos == 0) {
+                    ActivityCompat.requestPermissions(
+                            this, new String[]{
+                                    Manifest.permission.CAMERA,
+                                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                    Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSIONS_CALLBACK);
+
                     takePicture();
                 }
                 break;
@@ -216,83 +201,104 @@ public class newProduct extends AppCompatActivity implements AdapterView.OnItemS
                 if (numberOfPhotos == 5) {
                     takePicture();
                 }
-                break;
 
-        }
+
+        }//closes ViewGetId() switch
     }//closes onclick
 
-    private void getProductData() {
-        productName = productNameField.getText().toString().trim().toLowerCase();
-        productDescription = productDescriptionField.getText().toString().trim().toLowerCase();
-        if (productPriceField.getText().toString().length() > 0)
+    private boolean getProductData() {
+
+        if (!isEmpty(productNameField) && !isEmpty(productDescriptionField) && !isEmpty(productPriceField) && productPictures.size() > 0 && productCategory.length() > 0) {
+            productName = productNameField.getText().toString().trim().toLowerCase();
+            productDescription = productDescriptionField.getText().toString().trim().toLowerCase();
             productPrice = Float.parseFloat(productPriceField.getText().toString().trim());
-    }
+            return true;
+        } else {
+            Toast.makeText(this, "Por favor complete todos los campos de información", Toast.LENGTH_LONG).show();
+            return false;
+        }
+    }//closes getProductname
 
     private void uploadProduct() {
 
-        btnAdd.setEnabled(false);
-        String id = mAuth.getCurrentUser().getUid();
-        String productId = UUID.randomUUID().toString();
+        sellerID = mAuth.getCurrentUser().getUid();
+        productId = UUID.randomUUID().toString();
+        product = new Product(sellerID, productCategory, productId, productName, productDescription, productPrice);
 
+        uploadProductToDatabase();
+    }//closes upload product
+
+    private void uploadProductToDatabase() {
+
+        mDatabase.child("products").child(productCategory).child(productId).setValue(product).addOnCompleteListener(new OnCompleteListener<Void>() {
+
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+
+                if (task.isSuccessful()) {
+                    uploadProductReferenceToSeller();
+                } else {
+                    activateButtons();
+                    Toast.makeText(newProduct.this, "No se pudó postear el producto a la base de datos. " + task.getException().getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }//closes uploadProductToDatabase
+
+    private void uploadProductReferenceToSeller() {
+        HashMap<String, Object> productMetaData = new HashMap<>();
+        productMetaData.put("UUID", productId);
+        productMetaData.put("category", productCategory);
+
+        mDatabase.child("users").child(sellerID).child("products").child(productId).setValue(productMetaData).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+
+                if (task.isSuccessful()) {
+                    uploadPictures();
+                } else {
+                    activateButtons();
+                    Toast.makeText(newProduct.this, "No se pudó postear el producto en tu cuenta" + task.getException().getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }//close upload Product reference to seller;
+
+    private void uploadPictures() {
+
+        photosUploaded = 0;
+        Toast.makeText(newProduct.this, "Las fotos del producto se están subiendo, por favor espere", Toast.LENGTH_LONG).show();
+
+        //upload pictures to storage
         for (int i = 0; i < productPictures.size(); i++) {
 
-            StorageReference productRef = mStorageRef.child(productId + "(" + i + ")");
+            StorageReference productRef = mStorageRef.child(productId).child(productId + "-" + i);
 
             productRef.putFile(productPictures.get(i))
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             Uri url = taskSnapshot.getUploadSessionUri();
-                            //finish();
 
+                            photosUploaded += 1;
+
+                            if (photosUploaded >= productPictures.size()) {
+                                Toast.makeText(newProduct.this, "El producto se ha subido exitosamente", Toast.LENGTH_LONG).show();
+                                finish();
+                            } else {
+                                Toast.makeText(newProduct.this, "Se han subido " + photosUploaded + " de " + productPictures.size() + " fotos.", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception exception) {
-
-                            Toast.makeText(newProduct.this, "Hubo un problema al subir las fotos, intente de nuevo mas tarde", Toast.LENGTH_LONG).show();
-                            btnAdd.setEnabled(true);
+                            activateButtons();
+                            Toast.makeText(newProduct.this, "Hubo un problema al subir las fotos del producto. " + exception.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                         }
                     });
-        }
-        btnAdd.setEnabled(false);
-
-        Product product = new Product(productName, productDescription, productPrice, id);
-
-        mDatabase.child("productsGlobal").child(productCategory).child(productId).setValue(product).addOnCompleteListener(new OnCompleteListener<Void>() {
-
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-
-                if (task.isSuccessful()) {
-
-                    finish();
-
-                } else
-                    btnAdd.setEnabled(true);
-                Toast.makeText(newProduct.this, "Hubo un problema almacenando tu información en la base de datos, intentalo mas tarde", Toast.LENGTH_LONG).show();
-            }
-        });
-        btnAdd.setEnabled(false);
-        mDatabase.child("productosPropios").child(id).child(productId).setValue(product).addOnCompleteListener(new OnCompleteListener<Void>() {
-
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-
-                if (task.isSuccessful()) {
-
-                    finish();
-
-                } else
-                    Toast.makeText(newProduct.this, "Hubo un problema almacenando tu información en la base de datos, intentalo mas tarde", Toast.LENGTH_LONG).show();
-                btnAdd.setEnabled(true);
-
-            }
-        });
-
-    }//closes upload product
-
+        }//closes for of every picture
+    }//closes uploadPictures
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -311,7 +317,8 @@ public class newProduct extends AppCompatActivity implements AdapterView.OnItemS
     }//close onActivityResult
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (requestCode == PERMISSIONS_CALLBACK) {
@@ -324,5 +331,27 @@ public class newProduct extends AppCompatActivity implements AdapterView.OnItemS
                 }
             }
         }
-    }//closes OnRequestPermissionsResul
+    }//closes OnRequestPermissionsResulT
+
+    private boolean isEmpty(EditText etText) {
+        return etText.getText().toString().trim().length() == 0;
+    }
+
+    private void deactivateButtons() {
+        btnAdd.setEnabled(false);
+
+        for (int i = 0; i < addPhoto.length; i++) {
+            addPhoto[i].setEnabled(false);
+        }
+    }//close deactivate buttons
+
+    private void activateButtons() {
+        btnAdd.setEnabled(true);
+
+        for (int i = 0; i < addPhoto.length; i++) {
+            addPhoto[i].setEnabled(true);
+        }
+    }
+
+
 }//closes new product class

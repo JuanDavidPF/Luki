@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +33,7 @@ public class Store extends AppCompatActivity {
     private ArrayList<Product> products;
     private ArrayList<String> productId;
     private ArrayList<Uri> productsPictures;
+    private ImageView productPhoto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

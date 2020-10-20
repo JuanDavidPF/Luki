@@ -38,12 +38,12 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     private String idCard;
     private String pass;
     private String email;
+    private String UUID;
     private String userType;
 
     public void onStart() {
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
-
 
         if (currentUser != null) {
             Intent intent = new Intent(this.getApplicationContext(), MainCustomer.class);
@@ -82,7 +82,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 break;
 
             case R.id.login_btn_login:
-                getUserCredentials();
+                deactivateButtons();
+                getUserID();
                 break;
 
 
@@ -95,6 +96,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     }//closes method onClick
 
     private void logInUser() {
+
         mAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -116,77 +118,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                     finish();
 
                 } else {
-
-                    String errorCode = ((FirebaseAuthException) task.getException()).getErrorCode();
-
-                    switch (errorCode) {
-
-                        case "ERROR_INVALID_CUSTOM_TOKEN":
-                            Toast.makeText(Login.this, "El formato del Token personalizado es incorrecto, revisa la documentación", Toast.LENGTH_LONG).show();
-                            break;
-
-                        case "ERROR_CUSTOM_TOKEN_MISMATCH":
-                            Toast.makeText(Login.this, "El token personalizado corresponde a una audiencia distina", Toast.LENGTH_LONG).show();
-                            break;
-
-                        case "ERROR_INVALID_CREDENTIAL":
-                            Toast.makeText(Login.this, "Las credenciales de autencación están malformadas o han expirado", Toast.LENGTH_LONG).show();
-                            break;
-
-                        case "ERROR_INVALID_EMAIL":
-                            Toast.makeText(Login.this, "El email tiene un formato invalido", Toast.LENGTH_LONG).show();
-                            break;
-
-                        case "ERROR_WRONG_PASSWORD":
-                            Toast.makeText(Login.this, "La contraseña es invalida o el usuario no tiene una contraseña.", Toast.LENGTH_LONG).show();
-                            passField.setError("contraseña incorrecta");
-                            passField.requestFocus();
-                            passField.setText("");
-                            break;
-
-                        case "ERROR_USER_MISMATCH":
-                            Toast.makeText(Login.this, "Las credenciales no corresponen al usuario anteriormente logeado.", Toast.LENGTH_LONG).show();
-                            break;
-
-                        case "ERROR_REQUIRES_RECENT_LOGIN":
-                            Toast.makeText(Login.this, "Esta operación es delicada, es necesario que haga un login de manera reciente", Toast.LENGTH_LONG).show();
-                            break;
-
-                        case "ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL":
-                            Toast.makeText(Login.this, "Ya existe una cuenta registrada con este email pero con otras credenciales, intente inciar sesion con una cuenta que use este email", Toast.LENGTH_LONG).show();
-                            break;
-
-                        case "ERROR_EMAIL_ALREADY_IN_USE":
-                            Toast.makeText(Login.this, "Ya hay una cuenta registrada con este correo", Toast.LENGTH_LONG).show();
-
-                            break;
-
-                        case "ERROR_CREDENTIAL_ALREADY_IN_USE":
-                            Toast.makeText(Login.this, "Estas credenciales están asociadas a una cuenta ya existente", Toast.LENGTH_LONG).show();
-                            break;
-
-                        case "ERROR_USER_DISABLED":
-                            Toast.makeText(Login.this, "La cuenta de usuario ha sido desactivada por el administrador.", Toast.LENGTH_LONG).show();
-                            break;
-
-                        case "ERROR_USER_TOKEN_EXPIRED":
-                            Toast.makeText(Login.this, "Se cerró sesión, inicie nuevamente", Toast.LENGTH_LONG).show();
-                            break;
-
-                        case "ERROR_USER_NOT_FOUND":
-                            Toast.makeText(Login.this, "No hay información acerca de este usuario, la cuenta pudo haber sido borrada", Toast.LENGTH_LONG).show();
-                            break;
-
-                        case "ERROR_OPERATION_NOT_ALLOWED":
-                            Toast.makeText(Login.this, "Está operación no está permitida, debe configurarse en la consola", Toast.LENGTH_LONG).show();
-                            break;
-
-                        case "ERROR_WEAK_PASSWORD":
-                            Toast.makeText(Login.this, "La contraseña es muy debil", Toast.LENGTH_LONG).show();
-                            passField.setError("La contraseña no es valida, debe contener al menos 6 caracteres");
-                            passField.requestFocus();
-                            break;
-                    }
+                    Toast.makeText(Login.this, "Fallo el inicio de sesion: " + task.getException().getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                    activateButtons();
                 }//closes error catch
 
             }
@@ -194,35 +127,60 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
     }//closes logInUser
 
-    private void getUserCredentials() {
+    private void getUserID() {
 
         idCard = idcardField.getText().toString().trim();
         pass = passField.getText().toString();
 
         if (!idCard.isEmpty() && !pass.isEmpty()) {
-            mDatabase.child("users").child(idCard).addValueEventListener(new ValueEventListener() {
+            mDatabase.child("idReference").child(idCard).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                     if (dataSnapshot.exists()) {
-                        email = dataSnapshot.child("email").getValue().toString();
-                        userType = dataSnapshot.child("user_type").getValue().toString();
-                        logInUser();
+                        UUID = dataSnapshot.child("UUID").getValue().toString();
+                        getUserEmail();
+                    } else {
+                        Toast.makeText(Login.this, "No existe un usuario registrado con esta cedula", Toast.LENGTH_LONG).show();
+                        activateButtons();
                     }
                 }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                    Toast.makeText(Login.this, "Hubo un problema al iniciar sesion: " + databaseError.getMessage(), Toast.LENGTH_LONG).show();
+                    activateButtons();
                 }
             });
 
         } else {
             Toast.makeText(this.getApplicationContext(), "Por favor complete los campos necesarios", Toast.LENGTH_LONG).show();
-
+            activateButtons();
         }
     }
 
+    private void getUserEmail() {
+
+        mDatabase.child("users").child(UUID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    email = dataSnapshot.child("email").getValue().toString();
+                    userType = dataSnapshot.child("user_type").getValue().toString();
+                    logInUser();
+                } else {
+                    activateButtons();
+                    Toast.makeText(Login.this, "No existe un usuario registrado con esta cedula", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(Login.this, "Hubo un problema al iniciar sesion: " + databaseError.getMessage(), Toast.LENGTH_LONG).show();
+                activateButtons();
+            }
+        });
+    }
 
     @Override
     protected void onResume() {
@@ -236,6 +194,12 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         forgotBtn.setEnabled(false);
         signBtn.setEnabled(false);
         loginBtn.setEnabled(false);
+    }
+
+    private void activateButtons() {
+        forgotBtn.setEnabled(true);
+        signBtn.setEnabled(true);
+        loginBtn.setEnabled(true);
     }
 
 }//closes class Login

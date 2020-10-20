@@ -18,17 +18,27 @@
         <activity android:name=".ProductCheckOut"></activity>
         <activity android:name=".Store"></activity>
         <activity android:name=".Catalogue"></activity>
-        <activity android:name=".newProduct"></activity>
+        <activity android:name=".newProduct">
+
+        </activity>
         <activity android:name=".MainCustomer" />
         <activity android:name=".MainSeller"></activity>
         <activity android:name=".WhoAmI" />
-        <activity android:name=".SignUp" />
-        <activity android:name=".Login" />
-        <activity android:name=".SplashScreen">
+        <activity android:name=".SignUp">
+
+        </activity>
+        <activity android:name=".Login" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+        </activity>
+        <activity android:name=".SplashScreen">
+
+
+
+
         </activity>
 
         <provider

@@ -6,9 +6,12 @@ import androidx.constraintlayout.motion.widget.MotionLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Debug;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.luki.model.User;
@@ -30,6 +33,8 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
     private MotionLayout animation;
 
     private Button nextBtn;
+    private ImageButton backBtn;
+
 
     private EditText nameField;
     private EditText lastNameField;
@@ -52,6 +57,8 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
     private String pass;
     private String repass;
 
+    String id;
+    User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +68,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-
+        backBtn = findViewById(R.id.signUp_btn_back);
         nextBtn = findViewById(R.id.sign_btn_next);
         animation = findViewById(R.id.animation);
 
@@ -81,6 +88,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
         typeOfUser = getIntent().getExtras().getString("typeOfUser");
         nextBtn.setOnClickListener(this);
+        backBtn.setOnClickListener(this);
 
     }//closes onCreateMethod
 
@@ -90,6 +98,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         switch ((view.getId())) {
 
             case R.id.sign_btn_next:
+
 
                 switch (animation.getCurrentState()) {
 
@@ -107,24 +116,45 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                     case R.id.thirdPhase:
 
                         //finishes the signUp
-                        deactivateButtons();
-                        getUserInfo();
+
                         if (checkData()) {
+                            deactivateButtons();
                             registerUser();
                         }
-
 
                         break;
                 }
 
+                break;//closes the button next listener
 
-                break;//closes the button next listenel
 
+            case R.id.signUp_btn_back:
+
+
+                switch (animation.getCurrentState()) {
+
+                    case R.id.end:
+
+                        finish();
+
+                        break;
+                    case R.id.secondPhase:
+
+                        animation.transitionToState(R.id.end);
+
+                        break;
+
+                    case R.id.thirdPhase:
+
+                        animation.transitionToState(R.id.secondPhase);
+                        break;
+                }
+
+                break;
 
         }//closes view switch
 
     }//closes onClick method
-
 
     private void registerUser() {
 
@@ -134,128 +164,86 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
                 if (task.isSuccessful()) {
 
-                    String id = mAuth.getCurrentUser().getUid();
-                    User user = new User(id, name, idCard, birthDate, expDate, email, pass, typeOfUser);
-
-                    mDatabase.child("users").child(idCard + "").setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task2) {
-
-                            if (task2.isSuccessful()) {
-
-                                Intent toMain = new Intent();
-
-                                switch (typeOfUser) {
-                                    case "customer":
-                                        toMain = new Intent(SignUp.this, MainCustomer.class);
-                                        break;
-                                    case "seller":
-                                        toMain = new Intent(SignUp.this, MainSeller.class);
-                                        break;
-                                }
-
-                                startActivity(toMain);
-
-                                finish();
-
-
-                            } else {
-                                Toast.makeText(SignUp.this, "Hubo un problema almacenando tu información en la base de datos, intentalo mas tarde", Toast.LENGTH_LONG).show();
-
-                            }
-                        }
-                    });
+                    id = mAuth.getCurrentUser().getUid();
+                    user = new User(id, name, idCard, birthDate, expDate, email, pass, typeOfUser);
+                    registerUserOnDatabase();
 
                 } else {
-
-                    String errorCode = ((FirebaseAuthException) task.getException()).getErrorCode();
-
-                    switch (errorCode) {
-
-                        case "ERROR_INVALID_CUSTOM_TOKEN":
-                            Toast.makeText(SignUp.this, "El formato del Token personalizado es incorrecto, revisa la documentación", Toast.LENGTH_LONG).show();
-                            break;
-
-                        case "ERROR_CUSTOM_TOKEN_MISMATCH":
-                            Toast.makeText(SignUp.this, "El token personalizado corresponde a una audiencia distina", Toast.LENGTH_LONG).show();
-                            break;
-
-                        case "ERROR_INVALID_CREDENTIAL":
-                            Toast.makeText(SignUp.this, "Las credenciales de autencación están malformadas o han expirado", Toast.LENGTH_LONG).show();
-                            break;
-
-                        case "ERROR_INVALID_EMAIL":
-                            Toast.makeText(SignUp.this, "El email tiene un formato invalido", Toast.LENGTH_LONG).show();
-                            emailField.setError("El email tiene un formato invalido");
-                            emailField.requestFocus();
-                            break;
-
-                        case "ERROR_WRONG_PASSWORD":
-                            Toast.makeText(SignUp.this, "La contraseña es invalida o el usuario no tiene una contraseña.", Toast.LENGTH_LONG).show();
-                            passField.setError("contraseña incorrecta");
-                            passField.requestFocus();
-                            passField.setText("");
-                            break;
-
-                        case "ERROR_USER_MISMATCH":
-                            Toast.makeText(SignUp.this, "Las credenciales no corresponen al usuario anteriormente logeado.", Toast.LENGTH_LONG).show();
-                            break;
-
-                        case "ERROR_REQUIRES_RECENT_LOGIN":
-                            Toast.makeText(SignUp.this, "Esta operación es delicada, es necesario que haga un login de manera reciente", Toast.LENGTH_LONG).show();
-                            break;
-
-                        case "ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL":
-                            Toast.makeText(SignUp.this, "Ya existe una cuenta registrada con este email pero con otras credenciales, intente inciar sesion con una cuenta que use este email", Toast.LENGTH_LONG).show();
-                            break;
-
-                        case "ERROR_EMAIL_ALREADY_IN_USE":
-                            Toast.makeText(SignUp.this, "Ya hay una cuenta registrada con este correo", Toast.LENGTH_LONG).show();
-                            emailField.setError("Ya hay una cuenta registrada con este correo");
-                            emailField.requestFocus();
-                            break;
-
-                        case "ERROR_CREDENTIAL_ALREADY_IN_USE":
-                            Toast.makeText(SignUp.this, "Estas credenciales están asociadas a una cuenta ya existente", Toast.LENGTH_LONG).show();
-                            break;
-
-                        case "ERROR_USER_DISABLED":
-                            Toast.makeText(SignUp.this, "La cuenta de usuario ha sido desactivada por el administrador.", Toast.LENGTH_LONG).show();
-                            break;
-
-                        case "ERROR_USER_TOKEN_EXPIRED":
-                            Toast.makeText(SignUp.this, "Se cerró sesión, inicie nuevamente", Toast.LENGTH_LONG).show();
-                            break;
-
-                        case "ERROR_USER_NOT_FOUND":
-                            Toast.makeText(SignUp.this, "No hay información acerca de este usuario, la cuenta pudo haber sido borrada", Toast.LENGTH_LONG).show();
-                            break;
-
-                        case "ERROR_OPERATION_NOT_ALLOWED":
-                            Toast.makeText(SignUp.this, "Está operación no está permitida, debe configurarse en la consola", Toast.LENGTH_LONG).show();
-                            break;
-
-                        case "ERROR_WEAK_PASSWORD":
-                            Toast.makeText(SignUp.this, "La contraseña es muy debil", Toast.LENGTH_LONG).show();
-                            passField.setError("La contraseña no es valida, debe contener al menos 6 caracteres");
-                            passField.requestFocus();
-                            break;
-
-                    }
-                }//closes error catch
-
-
-            }//closes onComplete
+                    activateButtons();
+                    Toast.makeText(SignUp.this, "Falló el registro del usuario. " + task.getException().getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
         });
     }//closes register user
 
+    private void registerUserOnDatabase() {
+
+        mDatabase.child("users").child(id).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+
+                if (task.isSuccessful()) {
+
+                    idReference();
+
+                } else {
+                    activateButtons();
+                    Toast.makeText(SignUp.this, "Falló el registro en la base de datos " + task.getException().getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }//closes registerUserOnDatabase method
+
+    private void idReference() {
+
+        mDatabase.child("idReference").child(idCard + "").child("UUID").setValue(id).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+
+                    Intent toMain = new Intent();
+
+                    switch (typeOfUser) {
+                        case "customer":
+                            toMain = new Intent(SignUp.this, MainCustomer.class);
+                            break;
+                        case "seller":
+                            toMain = new Intent(SignUp.this, MainSeller.class);
+                            break;
+                    }
+
+                    startActivity(toMain);
+                    finish();
+
+                } else {
+                    activateButtons();
+                    Toast.makeText(SignUp.this, "Falló el registro en la base de datos " + task.getException().getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }//closes idReference method
 
     private boolean checkData() {
-        if (!name.isEmpty() && String.valueOf(idCard).length() > 0 && String.valueOf(birthDate).length() > 0 && String.valueOf(expDate).length() > 0 && !email.isEmpty() && !pass.isEmpty() && !repass.isEmpty()) {
+
+
+        if (!isEmpty(nameField) && !isEmpty(lastNameField) && !isEmpty(idCardField) && !isEmpty(birthDayField) &&
+                !isEmpty(birthMonthField) && !isEmpty(birthYearField) && !isEmpty(expDayField) &&
+                !isEmpty(expMonthField) && !isEmpty(expYearfield) && !isEmpty(emailField) && !isEmpty(passField) && !isEmpty(repassField)) {
+
+            name = nameField.getText().toString().trim().toUpperCase() + " " + lastNameField.getText().toString().trim().toUpperCase();
+            idCard = Integer.parseInt(idCardField.getText().toString().trim());
+            birthDate = Integer.parseInt(birthDayField.getText().toString().trim() + birthMonthField.getText().toString().trim() + birthYearField.getText().toString().trim());
+            expDate = Integer.parseInt(expDayField.getText().toString().trim() + expMonthField.getText().toString().trim() + expYearfield.getText().toString().trim());
+            email = emailField.getText().toString().trim().toLowerCase();
+            pass = passField.getText().toString();
+            repass = repassField.getText().toString();
+
+
             if (String.valueOf(idCard).length() == 10) {
                 if (String.valueOf(birthDate).length() == 8) {
                     if (String.valueOf(expDate).length() == 8) {
                         if (pass.equals(repass)) {
+
                             return true;
                         } else
                             Toast.makeText(this.getApplicationContext(), "Las contraseñas no coinciden", Toast.LENGTH_LONG).show();
@@ -274,19 +262,16 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         return false;
     }//closes the createUser Method
 
-    private void getUserInfo() {
-        name = nameField.getText().toString().trim().toUpperCase() + " " + lastNameField.getText().toString().trim().toUpperCase();
-        idCard = Integer.parseInt(idCardField.getText().toString().trim());
-        birthDate = Integer.parseInt(birthDayField.getText().toString().trim() + birthMonthField.getText().toString().trim() + birthYearField.getText().toString().trim());
-        expDate = Integer.parseInt(expDayField.getText().toString().trim() + expMonthField.getText().toString().trim() + expYearfield.getText().toString().trim());
-        email = emailField.getText().toString().trim().toLowerCase();
-        pass = passField.getText().toString();
-        repass = repassField.getText().toString();
-
-    }//closes getUserInfo
+    private boolean isEmpty(EditText etText) {
+        return etText.getText().toString().trim().length() == 0;
+    }
 
     private void deactivateButtons() {
         nextBtn.setEnabled(false);
+    }
+
+    private void activateButtons() {
+        nextBtn.setEnabled(true);
     }
 
     @Override
