@@ -50,9 +50,9 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
     private EditText repassField;
 
     private String name;
-    private int birthDate;
+    private String birthDate;
     private int idCard;
-    private int expDate;
+    private String expDate;
     private String email;
     private String pass;
     private String repass;
@@ -205,7 +205,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
                     switch (typeOfUser) {
                         case "customer":
-                            toMain = new Intent(SignUp.this, MainCustomer.class);
+                            toMain = new Intent(SignUp.this, Catalogue.class);
                             break;
                         case "seller":
                             toMain = new Intent(SignUp.this, MainSeller.class);
@@ -232,16 +232,17 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
             name = nameField.getText().toString().trim().toUpperCase() + " " + lastNameField.getText().toString().trim().toUpperCase();
             idCard = Integer.parseInt(idCardField.getText().toString().trim());
-            birthDate = Integer.parseInt(birthDayField.getText().toString().trim() + birthMonthField.getText().toString().trim() + birthYearField.getText().toString().trim());
-            expDate = Integer.parseInt(expDayField.getText().toString().trim() + expMonthField.getText().toString().trim() + expYearfield.getText().toString().trim());
+            birthDate = birthDayField.getText().toString().trim() + birthMonthField.getText().toString().trim() + birthYearField.getText().toString().trim();
+            expDate = expDayField.getText().toString().trim() + expMonthField.getText().toString().trim() + expYearfield.getText().toString().trim();
             email = emailField.getText().toString().trim().toLowerCase();
             pass = passField.getText().toString();
             repass = repassField.getText().toString();
 
+            Log.e("<<<", birthDate + "");
 
             if (String.valueOf(idCard).length() == 10) {
-                if (String.valueOf(birthDate).length() == 8) {
-                    if (String.valueOf(expDate).length() == 8) {
+                if (birthDate.length() == 8) {
+                    if (expDate.length() == 8) {
                         if (pass.equals(repass)) {
 
                             return true;

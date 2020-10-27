@@ -15,32 +15,26 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ProductCheckOut"></activity>
-        <activity android:name=".Store"></activity>
-        <activity android:name=".Catalogue"></activity>
-        <activity android:name=".newProduct">
+        <activity android:name=".CheckOut"></activity>
+        <activity android:name=".ProductDetails" />
+        <activity android:name=".Store" />
+        <activity android:name=".Catalogue">
 
         </activity>
+        <activity android:name=".newProduct"></activity>
         <activity android:name=".MainCustomer" />
-        <activity android:name=".MainSeller"></activity>
+        <activity android:name=".MainSeller" />
         <activity android:name=".WhoAmI" />
-        <activity android:name=".SignUp">
-
-        </activity>
-        <activity android:name=".Login" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
-        </activity>
+        <activity android:name=".SignUp" />
+        <activity android:name=".Login" />
         <activity android:name=".SplashScreen">
 
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-
-
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
-
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.luki"

@@ -26,6 +26,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
 
     private FirebaseAuth mAuth;
+    FirebaseUser currentUser;
     private DatabaseReference mDatabase;
 
     private Button forgotBtn;
@@ -43,12 +44,11 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
     public void onStart() {
         super.onStart();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        currentUser = mAuth.getCurrentUser();
 
         if (currentUser != null) {
-            Intent intent = new Intent(this.getApplicationContext(), MainCustomer.class);
-            startActivity(intent);
-            finish();
+            getUserType();
+
         }
     }//close onStartMethod
 
@@ -107,7 +107,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
                     switch (userType) {
                         case "customer":
-                            toMain = new Intent(Login.this, MainCustomer.class);
+                            toMain = new Intent(Login.this, Catalogue.class);
                             break;
                         case "seller":
                             toMain = new Intent(Login.this, MainSeller.class);
@@ -126,6 +126,41 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         });
 
     }//closes logInUser
+
+    private void getUserType() {
+
+        mDatabase.child(currentUser.getUid()).child("user_type").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if (dataSnapshot.exists()) {
+
+
+                    Intent toMain = new Intent();
+                    userType = dataSnapshot.getValue().toString();
+
+                    switch (userType) {
+                        case "customer":
+                            toMain = new Intent(Login.this, Catalogue.class);
+                            break;
+                        case "seller":
+                            toMain = new Intent(Login.this, MainSeller.class);
+                            break;
+                    }
+                    startActivity(toMain);
+                    finish();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(Login.this, "Hubo un problema al iniciar sesion: " + databaseError.getMessage(), Toast.LENGTH_LONG).show();
+                activateButtons();
+            }
+        });
+
+    }
 
     private void getUserID() {
 

@@ -2,10 +2,12 @@ package com.example.luki.model;
 
 import android.net.Uri;
 
+
+import java.io.Serializable;
 import java.net.URI;
 import java.util.ArrayList;
 
-public class Product {
+public class Product implements Serializable {
 
     private String seller_id;
     private String product_category;

@@ -2,15 +2,15 @@ package com.example.luki;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.luki.StoreConstructor.ProductsAdapter;
 import com.example.luki.model.Product;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -26,32 +26,50 @@ import java.util.ArrayList;
 
 public class Store extends AppCompatActivity {
 
-    private String category;
-    private TextView title;
     private DatabaseReference mDatabase;
     private StorageReference mStorageRef;
-    private ArrayList<Product> products;
-    private ArrayList<String> productId;
-    private ArrayList<Uri> productsPictures;
-    private ImageView productPhoto;
+
+    private String category;
+    private TextView title;
+
+
+    private RecyclerView productsContainer;
+    private GridLayoutManager layoutManager;
+    private ProductsAdapter productsAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_store);
+
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mStorageRef = FirebaseStorage.getInstance().getReference();
+
         category = getIntent().getExtras().getString("categoria");
         title = findViewById(R.id.storeTitle);
         title.setText(category);
         category = category.toLowerCase();
 
-        products = new ArrayList<Product>();
-        productId = new ArrayList<String>();
-        productsPictures = new ArrayList<Uri>();
+        productsContainer = findViewById(R.id.store_RV_productContainer);
+        productsContainer.setHasFixedSize(true);
+
+        layoutManager = new GridLayoutManager(this, 2);
+        productsAdapter = new ProductsAdapter();
+
+        productsContainer.setLayoutManager(layoutManager);
+        productsContainer.setAdapter(productsAdapter);
+
+        GetProductInfo();
 
 
-        mDatabase.child("productsGlobal").child(category).addValueEventListener(new ValueEventListener() {
+    }//closes OnCreate
+
+
+    private void GetProductInfo() {
+
+        //Get Product info
+        mDatabase.child("products").child(category).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -59,9 +77,7 @@ public class Store extends AppCompatActivity {
 
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
-                        productId.add(snapshot.getKey());
-                        products.add(snapshot.getValue(Product.class));
-
+                        RepresentProducts(snapshot.getValue(Product.class));
                     }
                 }
             }
@@ -70,6 +86,29 @@ public class Store extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });//closes firebase retrieve
-    }//closes OnCreate
+
+    }//closes Get Product info
+
+
+    private void RepresentProducts(Product product) {
+
+
+        mStorageRef.child(product.getProduct_id()).child(product.getProduct_id() + "-0").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+
+            @Override
+            public void onSuccess(Uri thumbnail) {
+                productsAdapter.NewProduct(product, thumbnail);
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+                Toast.makeText(Store.this, exception.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }//closes RepresentProducts method
+
 
 }

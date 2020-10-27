@@ -78,6 +78,11 @@ public class newProduct extends AppCompatActivity implements AdapterView.OnItemS
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_product);
+        ActivityCompat.requestPermissions(
+                this, new String[]{
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSIONS_CALLBACK);
 
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -136,7 +141,7 @@ public class newProduct extends AppCompatActivity implements AdapterView.OnItemS
 
         if (numberOfPhotos < 6) {
             Intent takePhoto = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            file = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES) + "/photo.png");
+            file = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES) + "/" + UUID.randomUUID().toString() + ".png");
             Uri uri = FileProvider.getUriForFile(this, getPackageName(), file);
             productPictures.add(uri);
             takePhoto.putExtra(MediaStore.EXTRA_OUTPUT, uri);
@@ -163,11 +168,7 @@ public class newProduct extends AppCompatActivity implements AdapterView.OnItemS
 
             case R.id.newProduct_imgBtn_1:
                 if (numberOfPhotos == 0) {
-                    ActivityCompat.requestPermissions(
-                            this, new String[]{
-                                    Manifest.permission.CAMERA,
-                                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                    Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSIONS_CALLBACK);
+
 
                     takePicture();
                 }
@@ -278,7 +279,7 @@ public class newProduct extends AppCompatActivity implements AdapterView.OnItemS
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            Uri url = taskSnapshot.getUploadSessionUri();
+
 
                             photosUploaded += 1;
 

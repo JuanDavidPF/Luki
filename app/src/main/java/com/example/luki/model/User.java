@@ -5,14 +5,14 @@ public class User {
     private String id;
     private String name;
     private int id_document;
-    private int birth_date;
-    private int id_exp_date;
+    private String birth_date;
+    private String id_exp_date;
     private String email;
     private String pass;
     private String user_type;
 
 
-    public User(String id, String name, int id_document, int birth_date, int id_exp_date, String email, String pass, String user_type) {
+    public User(String id, String name, int id_document, String birth_date, String id_exp_date, String email, String pass, String user_type) {
         this.id = id;
         this.name = name;
         this.id_document = id_document;
@@ -58,19 +58,19 @@ public class User {
         this.id_document = id_document;
     }
 
-    public int getBirth_date() {
+    public String getBirth_date() {
         return birth_date;
     }
 
-    public void setBirth_date(int birth_date) {
+    public void setBirth_date(String birth_date) {
         this.birth_date = birth_date;
     }
 
-    public int getId_exp_date() {
+    public String getId_exp_date() {
         return id_exp_date;
     }
 
-    public void setId_exp_date(int id_exp_date) {
+    public void setId_exp_date(String id_exp_date) {
         this.id_exp_date = id_exp_date;
     }
 
