@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/whiteLuki"
     tools:context=".WhoAmI">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -11,6 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:background="@drawable/one_corner_rounded_gray"
+        android:backgroundTint="#F0F0F8"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -25,8 +27,10 @@
             android:scaleType="centerInside"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.76"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0"
             app:srcCompat="@drawable/who_am_i_background" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -67,9 +71,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="50dp"
                 android:layout_marginEnd="24dp"
-                android:layout_marginBottom="100dp"
+                android:layout_marginBottom="70dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -85,7 +89,7 @@
 
                     <ImageView
                         android:id="@+id/imageView7"
-                        android:layout_width="187dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="118dp"
                         android:contentDescription="@string/noDescription"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -96,11 +100,12 @@
                     <Button
                         android:id="@+id/whoAmI_btn_seller"
                         style="@style/ButtonMainSmall"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="34dp"
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="16dp"
                         android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
                         android:text="@string/seller"
                         android:textSize="14sp"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -111,9 +116,9 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="169dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="173dp"
-                    android:layout_marginStart="24dp"
+                    android:layout_marginStart="8dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/constraintLayout6"
@@ -133,9 +138,12 @@
                     <Button
                         android:id="@+id/whoAmI_btn_customer"
                         style="@style/ButtonMainSmall"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="34dp"
+                        android:layout_marginStart="8dp"
                         android:layout_marginTop="16dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
                         android:text="@string/customer"
                         android:textSize="14sp"
                         app:layout_constraintBottom_toBottomOf="parent"

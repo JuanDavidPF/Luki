@@ -1,6 +1,7 @@
 package com.example.luki.Gallery;
 
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,10 +20,14 @@ public class ThumbnailsAdapter extends RecyclerView.Adapter<ThumbnailView> imple
 
     private ArrayList<Thumbnail> thumbnails;
     private ThumbnailHandler observer;
+    private int ViewHolderId;
+    private int ImageViewId;
 
-    public ThumbnailsAdapter() {
+    public ThumbnailsAdapter(int ViewHolerId, int ImageViewId) {
 
         thumbnails = new ArrayList<Thumbnail>();
+        this.ViewHolderId = ViewHolerId;
+        this.ImageViewId = ImageViewId;
 
     }//closes thumbnailsAdapter Constructor
 
@@ -33,22 +38,23 @@ public class ThumbnailsAdapter extends RecyclerView.Adapter<ThumbnailView> imple
     }//closes AddThumbnail method
 
 
+
     @NonNull
     @Override
     public ThumbnailView onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View thumbnailXML = inflater.inflate(R.layout.thumnail, null);
+        View thumbnailXML = inflater.inflate(ViewHolderId, null);
         ConstraintLayout thumbnailRoot = (ConstraintLayout) thumbnailXML;
-        ThumbnailView thumbnailView = new ThumbnailView(thumbnailRoot);
+        ThumbnailView thumbnailView = new ThumbnailView(thumbnailRoot, ImageViewId);
         return thumbnailView;
     }
 
     @Override
     public void onBindViewHolder(@NonNull ThumbnailView holder, int position) {
 
-        Glide.with(holder.getThumbnailPicture().getContext()).load(thumbnails.get(position).getThumbnailUri()).fitCenter().into(holder.getThumbnailPicture());
-        holder.getThumbnailPicture().setClipToOutline(true);
+        Glide.with(holder.getThumbnailPicture().getContext()).load(thumbnails.get(position).getThumbnailUri()).into(holder.getThumbnailPicture());
+        holder.setUri(thumbnails.get(position).getThumbnailUri());
         holder.setListener(this);
     }
 
@@ -62,11 +68,11 @@ public class ThumbnailsAdapter extends RecyclerView.Adapter<ThumbnailView> imple
     }
 
     @Override
-    public void onSelectImage(Drawable thumbnail) {
+    public void onSelectImage(Uri thumbnail) {
         observer.SetMainImage(thumbnail);
     }
 
     public interface ThumbnailHandler {
-        void SetMainImage(Drawable drawable);
+        void SetMainImage(Uri uri);
     }
 }//closes ThumnailsAdapter class

@@ -3,8 +3,11 @@ package com.example.luki;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,7 +29,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
 
     private FirebaseAuth mAuth;
-    FirebaseUser currentUser;
+    private FirebaseUser currentUser;
     private DatabaseReference mDatabase;
 
     private Button forgotBtn;
@@ -44,11 +47,14 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
     public void onStart() {
         super.onStart();
+        mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
 
         if (currentUser != null) {
-            getUserType();
 
+            SharedPreferences pref = this.getSharedPreferences("GLOBAL_PREFERENCES", Context.MODE_PRIVATE);
+            String typeOfUser = pref.getString("user_type", null);
+            if (typeOfUser != null) resumeSession(typeOfUser);
         }
     }//close onStartMethod
 
@@ -57,7 +63,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
         idcardField = findViewById(R.id.login_editText_user);
@@ -114,6 +119,12 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                             break;
                     }
 
+
+                    SharedPreferences preferences = getSharedPreferences("GLOBAL_PREFERENCES", Context.MODE_PRIVATE);
+                    preferences.edit().putString("user_type", userType).commit();
+                    preferences.edit().putBoolean("isFirstTime", false).commit();
+
+
                     startActivity(toMain);
                     finish();
 
@@ -127,40 +138,21 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
     }//closes logInUser
 
-    private void getUserType() {
+    private void resumeSession(String resumePatameter) {
+        Intent resume = new Intent();
 
-        mDatabase.child(currentUser.getUid()).child("user_type").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+        switch (resumePatameter) {
+            case "customer":
+                resume = new Intent(Login.this, Catalogue.class);
+                break;
+            case "seller":
+                resume = new Intent(Login.this, MainSeller.class);
+                break;
+        }
+        startActivity(resume);
+        finish();
 
-                if (dataSnapshot.exists()) {
-
-
-                    Intent toMain = new Intent();
-                    userType = dataSnapshot.getValue().toString();
-
-                    switch (userType) {
-                        case "customer":
-                            toMain = new Intent(Login.this, Catalogue.class);
-                            break;
-                        case "seller":
-                            toMain = new Intent(Login.this, MainSeller.class);
-                            break;
-                    }
-                    startActivity(toMain);
-                    finish();
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(Login.this, "Hubo un problema al iniciar sesion: " + databaseError.getMessage(), Toast.LENGTH_LONG).show();
-                activateButtons();
-            }
-        });
-
-    }
+    }//closes resumeSession method
 
     private void getUserID() {
 

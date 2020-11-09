@@ -11,6 +11,7 @@
         <item name="windowActionBar">false</item>
 
 
+        <item name="android:spotShadowAlpha">0.5</item>
     </style>
 
     <style name="ButtonMainBig" parent="Widget.AppCompat.Button">

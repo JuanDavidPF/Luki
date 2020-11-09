@@ -63,6 +63,8 @@ public class ProductDetails extends AppCompatActivity implements ThumbnailsAdapt
     private ImageView loading;
     private String monto;
 
+    private int thumbnailsLoaded = 0;
+
     private MotionLayout animation;
 
 
@@ -88,7 +90,7 @@ public class ProductDetails extends AppCompatActivity implements ThumbnailsAdapt
         thumbnailsRV.setHasFixedSize(true);
         linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         thumbnailsRV.setLayoutManager(linearLayoutManager);
-        adapter = new ThumbnailsAdapter();
+        adapter = new ThumbnailsAdapter(R.layout.thumnail, R.id.thumbnailView_thumbnail);
         adapter.setObserver(this);
         thumbnailsRV.setAdapter(adapter);
 
@@ -137,9 +139,9 @@ public class ProductDetails extends AppCompatActivity implements ThumbnailsAdapt
                         public void onSuccess(Uri uri) {
 
                             adapter.AddThumbnail(new Thumbnail(uri));
-
+                            thumbnailsLoaded += 1;
                             //if its the last picture
-                            if (item == listResult.getItems().get(listResult.getItems().size() - 1)) {
+                            if (thumbnailsLoaded == listResult.getItems().size()) {
                                 animation.transitionToState(R.id.end);
                             }
                         }
@@ -168,8 +170,8 @@ public class ProductDetails extends AppCompatActivity implements ThumbnailsAdapt
     }//closes GetProductsPictures
 
     @Override
-    public void SetMainImage(Drawable drawable) {
-        Glide.with(ProductDetails.this).load(drawable).fitCenter().into(mainPicture);
+    public void SetMainImage(Uri uri) {
+        Glide.with(ProductDetails.this).load(uri).into(mainPicture);
     }//closes SetMainImage method
 
     @Override

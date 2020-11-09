@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainSeller_animation"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    app:layoutDescription="@xml/activity_main_seller_scene"
     tools:context=".MainSeller">
 
     <TextView
         android:id="@+id/textView9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="64dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="65dp"
         android:fontFamily="@font/poppins_bold"
         android:text="@string/welcome"
         android:textColor="@color/purpleLuki"
-        android:textSize="25sp"
+        android:textSize="22sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -25,8 +27,8 @@
 
     <ImageView
         android:id="@+id/imageView10"
-        android:layout_width="207dp"
-        android:layout_height="193dp"
+        android:layout_width="230dp"
+        android:layout_height="230dp"
         android:background="@android:color/transparent"
         android:translationY="-140dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -49,13 +51,15 @@
         app:srcCompat="@drawable/cloud" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout7"
+        android:id="@+id/mainSeller_LukiCredits"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="24dp"
         android:background="@drawable/main_content_frame"
+        android:clickable="true"
+        android:focusable="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView9">
@@ -68,7 +72,7 @@
             android:layout_marginTop="16dp"
             android:background="@android:color/transparent"
             android:fontFamily="@font/poppins_light"
-            android:text="Luki Balance"
+            android:text="Luki Disponible"
             android:textColor="@color/whiteLuki"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -81,12 +85,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="4dp"
             android:background="@android:color/transparent"
             android:fontFamily="@font/poppins_semibold"
             android:text="$0"
             android:textColor="@color/whiteLuki"
-            android:textSize="30sp"
+            android:textSize="25sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -110,7 +114,7 @@
         android:id="@+id/textView15"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="32dp"
         android:fontFamily="@font/poppins_semibold"
         android:text="@string/my_products"
@@ -119,8 +123,95 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout7" />
+        app:layout_constraintTop_toBottomOf="@+id/mainSeller_LukiCredits" />
 
+
+    <ImageView
+        android:id="@+id/mainSeller_loadingBar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout9"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView15"
+        app:srcCompat="@drawable/loading_gif" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/mainSeller_noProducsPanel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout9"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView15">
+
+        <ImageView
+            android:id="@+id/imageView28"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:alpha=".5"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/noproducts_emoji" />
+
+        <TextView
+            android:id="@+id/textView38"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="32dp"
+            android:fontFamily="@font/poppins_bold"
+            android:gravity="center_horizontal"
+            android:text="¡Oh! Parece que en este momento no tienes Luki productos"
+            android:textColor="@color/purpleLuki"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView28" />
+
+        <TextView
+            android:id="@+id/textView39"
+            style="@android:style/Widget.DeviceDefault.TextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="60dp"
+            android:fontFamily="@font/poppins_semibold"
+            android:gravity="center_horizontal"
+            android:text="¡Agrega tu primer producto!"
+            android:textColor="@color/violetLuki"
+            android:textSize="13sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView38" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/mainSeller_RecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout9"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView15">
+
+    </androidx.recyclerview.widget.RecyclerView>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout9"
@@ -154,10 +245,11 @@
 
             <ImageButton
                 android:id="@+id/mainSeller_imgBtn_addProduct"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginBottom="4dp"
                 android:background="@android:color/transparent"
+                android:scaleType="centerCrop"
                 app:layout_constraintBottom_toTopOf="@+id/textView16"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -186,10 +278,11 @@
 
             <ImageButton
                 android:id="@+id/mainSeller_imgBtn_myProducts"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginBottom="4dp"
                 android:background="@android:color/transparent"
+                android:scaleType="centerCrop"
                 app:layout_constraintBottom_toTopOf="@+id/textView17"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -197,61 +290,78 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ScrollView
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/mainSeller_tutorial_modal"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="24dp"
-        app:layout_constraintBottom_toTopOf="@+id/constraintLayout9"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView15"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
-            android:id="@+id/linearLayout"
+        <TextView
+            android:id="@+id/textView42"
+            android:layout_width="215dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="32dp"
+            android:fontFamily="@font/poppins_medium"
+            android:gravity="center|top"
+            android:text="En este cuadro encontrarás tú dinero de las ventas que has hecho en Luki"
+            android:textColor="@color/purpleLuki"
+            android:textSize="14sp"
+            android:translationZ="120dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/constraintLayout21"
+            app:layout_constraintTop_toTopOf="@+id/constraintLayout21"
+            app:layout_constraintVertical_bias="0.01999998" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout21"
+            android:layout_width="81dp"
+            android:layout_height="89dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
+            android:rotation="-184"
+            android:translationZ="200dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.04"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.32">
+
+            <ImageView
+                android:id="@+id/imageView29"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                app:srcCompat="@drawable/arrow_wizard" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout20"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="16dp"
-            android:orientation="vertical"
+            android:alpha="0.75"
+            android:background="#AAAACC"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView15">
+            app:layout_constraintTop_toTopOf="parent">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:gravity="center"
-                android:orientation="horizontal">
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <ImageButton
-                    android:id="@+id/mainSeller_myproducts_1"
-                    android:layout_width="70dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@android:color/transparent"
-                    app:srcCompat="@drawable/add_picture" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <ImageButton
-                    android:id="@+id/mainSeller_myproducts_2"
-                    android:layout_width="70dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@android:color/transparent"
-                    app:srcCompat="@drawable/add_picture" />
-
-                <ImageButton
-                    android:id="@+id/mainSeller_myproducts_3"
-                    android:layout_width="70dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@android:color/transparent"
-                    app:srcCompat="@drawable/add_picture" />
-            </LinearLayout>
-
-        </LinearLayout>
-    </ScrollView>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.motion.widget.MotionLayout>

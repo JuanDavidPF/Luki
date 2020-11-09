@@ -4,9 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.motion.widget.MotionLayout;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Debug;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -19,7 +20,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -70,7 +70,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
         backBtn = findViewById(R.id.signUp_btn_back);
         nextBtn = findViewById(R.id.sign_btn_next);
-        animation = findViewById(R.id.animation);
+        animation = findViewById(R.id.store_animation);
 
         nameField = findViewById(R.id.signup_et_name);
         lastNameField = findViewById(R.id.signup_et_lastname);
@@ -186,6 +186,9 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
                     idReference();
 
+
+
+
                 } else {
                     activateButtons();
                     Toast.makeText(SignUp.this, "Falló el registro en la base de datos " + task.getException().getLocalizedMessage(), Toast.LENGTH_LONG).show();
@@ -212,6 +215,10 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                             break;
                     }
 
+                    SharedPreferences preferences = getSharedPreferences("GLOBAL_PREFERENCES", Context.MODE_PRIVATE);
+                    preferences.edit().putString("user_type", typeOfUser).commit();
+                    preferences.edit().putBoolean("isFirstTime", false).commit();
+                    preferences.edit().putBoolean("hasFinishedTutorial", false).commit();
                     startActivity(toMain);
                     finish();
 

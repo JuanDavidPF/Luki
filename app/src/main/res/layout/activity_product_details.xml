@@ -11,8 +11,6 @@
     tools:context=".ProductDetails">
 
 
-
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout13"
         android:layout_width="match_parent"
@@ -22,27 +20,36 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/productDetail_imgView_mainPhoto"
-            android:layout_width="250dp"
-            android:layout_height="200dp"
-            android:layout_marginTop="30dp"
+        <androidx.cardview.widget.CardView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
             android:layout_marginBottom="40dp"
-            android:background="@drawable/rounded_corners"
-            android:scaleType="centerCrop"
+            app:cardCornerRadius="5dp"
+            app:cardElevation="4dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/productDetail_RV_photos"
-            tools:srcCompat="@tools:sample/avatars" />
+            app:layout_constraintTop_toBottomOf="@+id/productDetail_RV_photos">
+
+            <ImageView
+                android:id="@+id/productDetail_imgView_mainPhoto"
+                android:layout_width="match_parent"
+                android:layout_height="225dp"
+                android:scaleType="centerCrop"
+                tools:srcCompat="@tools:sample/avatars" />
+        </androidx.cardview.widget.CardView>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/productDetail_RV_photos"
             android:layout_width="0dp"
-            android:layout_height="75dp"
-            android:layout_marginStart="32dp"
+            android:layout_height="100dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="50dp"
-            android:layout_marginEnd="32dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/almostwhite_background"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -151,6 +158,8 @@
                 style="@style/ButtonMainSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:drawableStart="@drawable/money_icon"
+                android:drawablePadding="20dp"
                 android:layout_marginTop="50dp"
                 android:background="@drawable/rounded_corners"
                 android:backgroundTint="@color/salmonLuki"
@@ -169,7 +178,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#FFFFFF"
-        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

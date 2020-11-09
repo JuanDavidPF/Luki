@@ -21,7 +21,7 @@ public class Catalogue extends AppCompatActivity implements CategoriesAdapter.on
     private RecyclerView categoriesViewList;
     private LinearLayoutManager layoutManager;
     private CategoriesAdapter adapter;
-
+    private boolean categoryClicked = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,16 +47,20 @@ public class Catalogue extends AppCompatActivity implements CategoriesAdapter.on
 
     @Override
     public void toStore(String categoria) {
-        Intent toStore = new Intent(this, Store.class);
-        toStore.putExtra("categoria", categoria);
-        startActivity(toStore);
-        categoriesViewList.setEnabled(false);
+        if (!categoryClicked) {
+            categoryClicked = true;
+            Intent toStore = new Intent(this, Store.class);
+            toStore.putExtra("categoria", categoria);
+            startActivity(toStore);
+
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        categoriesViewList.setEnabled(true);
+        categoryClicked = false;
+
     }
 
 

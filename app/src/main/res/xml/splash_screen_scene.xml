@@ -62,6 +62,14 @@
                 motion:motionTarget="@+id/splash_btn_cta"
                 motion:framePosition="94"
                 android:alpha="0" />
+            <KeyAttribute
+                motion:motionTarget="@+id/splash_btn_cta"
+                motion:framePosition="100"
+                android:translationY="0dp" />
+            <KeyAttribute
+                motion:motionTarget="@+id/splash_btn_cta"
+                motion:framePosition="95"
+                android:translationY="500dp" />
         </KeyFrameSet>
     </Transition>
 
@@ -75,7 +83,9 @@
             android:alpha="0"
             android:layout_marginStart="32dp"
             motion:layout_constraintStart_toStartOf="parent"
-            android:id="@+id/splash_btn_cta" />
+            android:id="@+id/splash_btn_cta"
+            android:visibility="invisible"
+            android:translationY="500dp" />
     </ConstraintSet>
 
     <ConstraintSet android:id="@+id/end">
@@ -130,7 +140,7 @@
             android:layout_marginTop="64dp"
             android:layout_marginLeft="0dp"
             android:layout_marginStart="0dp" />
-        <Constraint
+d        <Constraint
             android:id="@+id/splash_btn_cta"
             motion:layout_constraintEnd_toEndOf="parent"
             android:layout_width="match_parent"
@@ -139,6 +149,8 @@
             android:layout_marginEnd="32dp"
             android:alpha="1"
             android:layout_marginStart="32dp"
-            motion:layout_constraintStart_toStartOf="parent" />
+            motion:layout_constraintStart_toStartOf="parent"
+            android:visibility="visible"
+            android:translationY="0dp" />
     </ConstraintSet>
 </MotionScene>

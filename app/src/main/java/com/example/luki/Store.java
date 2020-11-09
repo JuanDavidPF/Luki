@@ -2,14 +2,17 @@ package com.example.luki;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.motion.widget.MotionLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.luki.StoreConstructor.ProductsAdapter;
 import com.example.luki.model.Product;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -37,6 +40,11 @@ public class Store extends AppCompatActivity {
     private GridLayoutManager layoutManager;
     private ProductsAdapter productsAdapter;
 
+    private MotionLayout animation;
+    private ImageView loadingBar;
+
+    private int amountOfProduct = 0;
+    private int productLoaded = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +68,10 @@ public class Store extends AppCompatActivity {
         productsContainer.setLayoutManager(layoutManager);
         productsContainer.setAdapter(productsAdapter);
 
+        animation = findViewById(R.id.store_animation);
+        loadingBar = findViewById(R.id.store_loadingBar);
+
+        Glide.with(this).load(R.drawable.loading_gif).into(loadingBar);
         GetProductInfo();
 
 
@@ -74,9 +86,8 @@ public class Store extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 if (dataSnapshot.exists()) {
-
+                    amountOfProduct = (int) dataSnapshot.getChildrenCount();
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-
                         RepresentProducts(snapshot.getValue(Product.class));
                     }
                 }
@@ -98,6 +109,11 @@ public class Store extends AppCompatActivity {
             @Override
             public void onSuccess(Uri thumbnail) {
                 productsAdapter.NewProduct(product, thumbnail);
+                productLoaded += 1;
+
+                if (productLoaded == amountOfProduct) {
+                    animation.transitionToEnd();
+                }
 
             }
         }).addOnFailureListener(new OnFailureListener() {

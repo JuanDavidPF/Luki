@@ -1,30 +1,41 @@
 package com.example.luki;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.FileProvider;
-
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
+import android.view.Display;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.motion.widget.MotionLayout;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.FileProvider;
+
+import com.bumptech.glide.Glide;
 import com.example.luki.model.Product;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -74,6 +85,14 @@ public class newProduct extends AppCompatActivity implements AdapterView.OnItemS
 
     private Product product;
 
+
+    private ScrollView sv;
+    private MotionLayout animation;
+    private ConstraintLayout modalPanel;
+    private ImageView loadingBar;
+    private TextView loadingProgress;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,6 +139,13 @@ public class newProduct extends AppCompatActivity implements AdapterView.OnItemS
 
         btnAdd = findViewById(R.id.newProduct_btn_add);
         btnAdd.setOnClickListener(this);
+
+        animation=findViewById(R.id.NewProduct_Animation);
+        sv = findViewById(R.id.NewProduct_ScrollView);
+        modalPanel = findViewById(R.id.newProduct_loadingPanel);
+        loadingBar = findViewById(R.id.newProduct_loadingBar);
+        loadingProgress = findViewById(R.id.newProduct_loadingProgress);
+
     }
 
     @Override
@@ -159,7 +185,9 @@ public class newProduct extends AppCompatActivity implements AdapterView.OnItemS
 
             case R.id.newProduct_btn_add:
 
+
                 if (getProductData()) {
+
                     deactivateButtons();
                     uploadProduct();
                 }
@@ -267,8 +295,8 @@ public class newProduct extends AppCompatActivity implements AdapterView.OnItemS
 
     private void uploadPictures() {
 
+        openLoadingModal();
         photosUploaded = 0;
-        Toast.makeText(newProduct.this, "Las fotos del producto se están subiendo, por favor espere", Toast.LENGTH_LONG).show();
 
         //upload pictures to storage
         for (int i = 0; i < productPictures.size(); i++) {
@@ -278,17 +306,17 @@ public class newProduct extends AppCompatActivity implements AdapterView.OnItemS
             productRef.putFile(productPictures.get(i))
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
+
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-
                             photosUploaded += 1;
+                            if (photosUploaded == productPictures.size()) {
 
-                            if (photosUploaded >= productPictures.size()) {
                                 Toast.makeText(newProduct.this, "El producto se ha subido exitosamente", Toast.LENGTH_LONG).show();
                                 finish();
-                            } else {
-                                Toast.makeText(newProduct.this, "Se han subido " + photosUploaded + " de " + productPictures.size() + " fotos.", Toast.LENGTH_SHORT).show();
-                            }
+                            } else
+                                loadingProgress.setText("( " + photosUploaded + " / " + productPictures.size() + " )");
+
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -296,7 +324,17 @@ public class newProduct extends AppCompatActivity implements AdapterView.OnItemS
                         public void onFailure(@NonNull Exception exception) {
                             activateButtons();
                             Toast.makeText(newProduct.this, "Hubo un problema al subir las fotos del producto. " + exception.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                            animation.transitionToState(R.id.start);
+                            sv.setOnTouchListener(new View.OnTouchListener() {
+                                @Override
+                                public boolean onTouch(View v, MotionEvent event) {
+                                    return false;
+                                }
+                            });
+
                         }
+
+
                     });
         }//closes for of every picture
     }//closes uploadPictures
@@ -344,7 +382,7 @@ public class newProduct extends AppCompatActivity implements AdapterView.OnItemS
         for (int i = 0; i < addPhoto.length; i++) {
             addPhoto[i].setEnabled(false);
         }
-    }//close deactivate buttons
+    }//close deactivateButtons
 
     private void activateButtons() {
         btnAdd.setEnabled(true);
@@ -352,7 +390,36 @@ public class newProduct extends AppCompatActivity implements AdapterView.OnItemS
         for (int i = 0; i < addPhoto.length; i++) {
             addPhoto[i].setEnabled(true);
         }
-    }
+    }//close activateButtons buttons
+
+    private void openLoadingModal() {
+
+        animation.transitionToState(R.id.end);
+        sv.fullScroll(ScrollView.FOCUS_UP);
+        sv.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
+
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int height = size.y;
+        int width = size.x;
+
+        ViewGroup.LayoutParams params = modalPanel.getLayoutParams();
+        params.height = height;
+        params.width = width;
+        modalPanel.setLayoutParams(new ConstraintLayout.LayoutParams(params));
+        modalPanel.requestDisallowInterceptTouchEvent(true);
+
+        Glide.with(this).load(R.drawable.loading_gif).into(loadingBar);
+        loadingProgress.setText("( 0 / " + productPictures.size() + " )");
+
+
+    }//close openLoadingModal buttons
 
 
 }//closes new product class
