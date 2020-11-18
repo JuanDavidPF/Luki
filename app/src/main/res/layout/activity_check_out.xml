@@ -48,8 +48,8 @@
         android:id="@+id/constraintLayout19"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="50dp"
-        android:layout_marginEnd="50dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
         android:background="@drawable/main_content_frame"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -59,7 +59,7 @@
         app:layout_constraintVertical_bias="0.41000003">
 
         <TextView
-            android:id="@+id/textView30"
+            android:id="@+id/checkOut_productPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="45dp"
@@ -69,20 +69,7 @@
             android:textColor="@color/whiteLuki"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView28" />
-
-        <TextView
-            android:id="@+id/textView32"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="32dp"
-            android:fontFamily="@font/poppins_regular"
-            android:text="$12.00"
-            android:textColor="@color/whiteLuki"
-            android:textSize="12sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView30" />
+            app:layout_constraintTop_toBottomOf="@+id/checkOut_Hour" />
 
         <TextView
             android:id="@+id/textView23"
@@ -104,7 +91,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="60dp"
             android:fontFamily="@font/poppins_medium"
             android:text="Valor total"
             android:textColor="@color/whiteLuki"
@@ -112,14 +99,14 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView31" />
+            app:layout_constraintTop_toBottomOf="@+id/checkOut_productName" />
 
         <TextView
             android:id="@+id/checkOut_finalAmount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
-            android:layout_marginBottom="50dp"
+            android:layout_marginBottom="35dp"
             android:fontFamily="@font/poppins_semibold"
             android:text="$251.00"
             android:textColor="@color/whiteLuki"
@@ -131,11 +118,12 @@
             app:layout_constraintTop_toBottomOf="@+id/textView33" />
 
         <TextView
-            android:id="@+id/textView24"
-            android:layout_width="wrap_content"
+            android:id="@+id/checkOut_productID"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginTop="4dp"
+            android:layout_marginEnd="32dp"
             android:fontFamily="@font/poppins_regular"
             android:text="Código de envío"
             android:textColor="@color/whiteLuki"
@@ -157,10 +145,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView24" />
+            app:layout_constraintTop_toBottomOf="@+id/checkOut_productID" />
 
         <TextView
-            android:id="@+id/textView27"
+            android:id="@+id/checkOut_Date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -175,7 +163,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textView25" />
 
         <TextView
-            android:id="@+id/textView29"
+            android:id="@+id/checkOut_productName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -187,25 +175,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView27" />
+            app:layout_constraintTop_toBottomOf="@+id/checkOut_Date" />
 
         <TextView
-            android:id="@+id/textView31"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="8dp"
-            android:fontFamily="@font/poppins_bold"
-            android:text="Envio"
-            android:textColor="@color/whiteLuki"
-            android:textSize="12sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView29" />
-
-        <TextView
-            android:id="@+id/textView28"
+            android:id="@+id/checkOut_Hour"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -228,7 +201,7 @@
             android:textColor="@color/whiteLuki"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView24" />
+            app:layout_constraintTop_toBottomOf="@+id/checkOut_productID" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageView

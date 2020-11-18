@@ -34,8 +34,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.25"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/cloud" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/imageView11"
@@ -47,8 +46,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/cloud" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/mainSeller_LukiCredits"
@@ -137,8 +135,7 @@
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout9"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView15"
-        app:srcCompat="@drawable/loading_gif" />
+        app:layout_constraintTop_toBottomOf="@+id/textView15" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/mainSeller_noProducsPanel"
@@ -158,6 +155,7 @@
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:alpha=".5"
+            android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -209,7 +207,8 @@
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout9"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView15">
+        app:layout_constraintTop_toBottomOf="@+id/textView15"
+        tools:visibility="visible">
 
     </androidx.recyclerview.widget.RecyclerView>
 
@@ -282,6 +281,8 @@
                 android:layout_height="45dp"
                 android:layout_marginBottom="4dp"
                 android:background="@android:color/transparent"
+                android:clickable="false"
+                android:focusable="false"
                 android:scaleType="centerCrop"
                 app:layout_constraintBottom_toTopOf="@+id/textView17"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -291,9 +292,11 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/mainSeller_tutorial_modal"
+        android:id="@+id/constraintLayout7"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:alpha=".74"
+        android:background="#AAAACC"
         android:clickable="true"
         android:focusable="true"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -301,67 +304,80 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/textView42"
-            android:layout_width="215dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="32dp"
-            android:fontFamily="@font/poppins_medium"
-            android:gravity="center|top"
-            android:text="En este cuadro encontrarás tú dinero de las ventas que has hecho en Luki"
-            android:textColor="@color/purpleLuki"
-            android:textSize="14sp"
-            android:translationZ="120dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/constraintLayout21"
-            app:layout_constraintTop_toTopOf="@+id/constraintLayout21"
-            app:layout_constraintVertical_bias="0.01999998" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout21"
-            android:layout_width="81dp"
-            android:layout_height="89dp"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="8dp"
-            android:rotation="-184"
-            android:translationZ="200dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.04"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.32">
-
-            <ImageView
-                android:id="@+id/imageView29"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0"
-                app:srcCompat="@drawable/arrow_wizard" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout20"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:alpha="0.75"
-            android:background="#AAAACC"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/imageView27"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="32dp"
+        android:rotation="-179"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mainSeller_LukiCredits"
+        app:layout_constraintVertical_bias="0.00999999"
+        app:srcCompat="@drawable/arrow_wizard" />
+
+    <TextView
+        android:id="@+id/textView40"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_medium"
+        android:text="En este cuadro encontrarás tú dinero de las ventas que has hecho en Luki"
+        android:textAlignment="center"
+        android:textColor="@color/purpleLuki"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.66"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mainSeller_LukiCredits"
+        app:layout_constraintVertical_bias="0.13999999" />
+
+    <TextView
+        android:id="@+id/textView41"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_medium"
+        android:text="Puedes observar el catálogo de tus productos"
+        android:textAlignment="center"
+        android:textColor="@color/purpleLuki"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.66"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mainSeller_LukiCredits"
+        app:layout_constraintVertical_bias="0.13999999" />
+
+    <TextView
+        android:id="@+id/textView42"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_medium"
+        android:text="Con esta opción puedes agregar un nuevo producto a tu catálogo"
+        android:textAlignment="center"
+        android:textColor="@color/purpleLuki"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.66"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mainSeller_LukiCredits"
+        app:layout_constraintVertical_bias="0.13999999" />
+
+    <TextView
+        android:id="@+id/textView43"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_medium"
+        android:text="Con esta opción puedes hacerle seguimiento a tus pedidos"
+        android:textAlignment="center"
+        android:textColor="@color/purpleLuki"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.66"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mainSeller_LukiCredits"
+        app:layout_constraintVertical_bias="0.13999999" />
 
 </androidx.constraintlayout.motion.widget.MotionLayout>

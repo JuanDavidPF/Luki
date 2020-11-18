@@ -1,7 +1,9 @@
 package com.example.luki;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -93,6 +95,9 @@ public class newProduct extends AppCompatActivity implements AdapterView.OnItemS
     private TextView loadingProgress;
 
 
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -145,6 +150,7 @@ public class newProduct extends AppCompatActivity implements AdapterView.OnItemS
         modalPanel = findViewById(R.id.newProduct_loadingPanel);
         loadingBar = findViewById(R.id.newProduct_loadingBar);
         loadingProgress = findViewById(R.id.newProduct_loadingProgress);
+
 
     }
 
@@ -254,7 +260,8 @@ public class newProduct extends AppCompatActivity implements AdapterView.OnItemS
         productId = UUID.randomUUID().toString();
         product = new Product(sellerID, productCategory, productId, productName, productDescription, productPrice);
 
-        uploadProductToDatabase();
+        uploadPictures();
+
     }//closes upload product
 
     private void uploadProductToDatabase() {
@@ -284,7 +291,8 @@ public class newProduct extends AppCompatActivity implements AdapterView.OnItemS
             public void onComplete(@NonNull Task<Void> task) {
 
                 if (task.isSuccessful()) {
-                    uploadPictures();
+                    Toast.makeText(newProduct.this, "El producto se ha subido exitosamente", Toast.LENGTH_LONG).show();
+                    finish();
                 } else {
                     activateButtons();
                     Toast.makeText(newProduct.this, "No se pudó postear el producto en tu cuenta" + task.getException().getLocalizedMessage(), Toast.LENGTH_LONG).show();
@@ -311,9 +319,8 @@ public class newProduct extends AppCompatActivity implements AdapterView.OnItemS
 
                             photosUploaded += 1;
                             if (photosUploaded == productPictures.size()) {
+                                uploadProductToDatabase();
 
-                                Toast.makeText(newProduct.this, "El producto se ha subido exitosamente", Toast.LENGTH_LONG).show();
-                                finish();
                             } else
                                 loadingProgress.setText("( " + photosUploaded + " / " + productPictures.size() + " )");
 

@@ -123,7 +123,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                     SharedPreferences preferences = getSharedPreferences("GLOBAL_PREFERENCES", Context.MODE_PRIVATE);
                     preferences.edit().putString("user_type", userType).commit();
                     preferences.edit().putBoolean("isFirstTime", false).commit();
-
+                    preferences.edit().putBoolean("hasFinishedTutorial", true).commit();
 
                     startActivity(toMain);
                     finish();

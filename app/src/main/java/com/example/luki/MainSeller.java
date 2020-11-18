@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -57,15 +58,26 @@ public class MainSeller extends AppCompatActivity implements View.OnClickListene
     private ImageView loadingBar;
     private ConstraintLayout noProducts;
 
+    private int amountOfProducts;
+    private int productsLoaded;
+
     private boolean tutorialFinished;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SharedPreferences pref = this.getSharedPreferences("GLOBAL_PREFERENCES", Context.MODE_PRIVATE);
+        tutorialFinished = pref.getBoolean("hasFinishedTutorial", false);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_seller);
 
         animation = findViewById(R.id.mainSeller_animation);
-        lukiCredits =findViewById(R.id.mainSeller_LukiCredits);
+        if (tutorialFinished) {
+            animation.transitionToState(R.id.end);
+        }
+
+
+        lukiCredits = findViewById(R.id.mainSeller_LukiCredits);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
@@ -91,18 +103,11 @@ public class MainSeller extends AppCompatActivity implements View.OnClickListene
         productsContainer.setAdapter(adapter);
 
         noProducts = findViewById(R.id.mainSeller_noProducsPanel);
-        noProducts.setVisibility(View.INVISIBLE);
+        noProducts.setAlpha(0);
 
         loadingBar = findViewById(R.id.mainSeller_loadingBar);
         Glide.with(this).load(R.drawable.loading_gif).into(loadingBar);
 
-
-        SharedPreferences pref = this.getSharedPreferences("GLOBAL_PREFERENCES", Context.MODE_PRIVATE);
-        tutorialFinished = pref.getBoolean("hasFinishedTutorial", false);
-
-        if (!tutorialFinished) {
-            animation.transitionToEnd();
-        }
 
         getMyProductsID();
 
@@ -116,10 +121,17 @@ public class MainSeller extends AppCompatActivity implements View.OnClickListene
 
             case R.id.mainSeller_imgBtn_addProduct:
 
+
+                if (!tutorialFinished) {
+                    animation.transitionToState(R.id.end);
+                    tutorialFinished = true;
+                    SharedPreferences preferences = getSharedPreferences("GLOBAL_PREFERENCES", Context.MODE_PRIVATE);
+                    preferences.edit().putBoolean("hasFinishedTutorial", true).apply();
+                }
+
                 Intent addProduct = new Intent(this, newProduct.class);
                 startActivity(addProduct);
                 deactivateBtns();
-
                 break;
 
 
@@ -143,19 +155,17 @@ public class MainSeller extends AppCompatActivity implements View.OnClickListene
         mDatabase.child("users").child(currentUser.getUid()).child("products").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
+                adapter.RestartAdapter();
                 if (dataSnapshot.exists()) {
-
-
+                    noProducts.setAlpha(0);
+                    loadingBar.setAlpha(1f);
+                    amountOfProducts = (int) dataSnapshot.getChildrenCount();
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         RepresentProducts(snapshot.getKey());
                     }
                 } else if (!dataSnapshot.exists() || (dataSnapshot.exists() && dataSnapshot.getChildrenCount() == 0)) {
-                    productsContainer.setEnabled(false);
-                    Glide.with(MainSeller.this).clear(loadingBar);
-                    loadingBar.setEnabled(false);
-                    noProducts.setVisibility(View.VISIBLE);
-
+                    loadingBar.setAlpha(0f);
+                    noProducts.setAlpha(1);
                 }
             }
 
@@ -176,8 +186,13 @@ public class MainSeller extends AppCompatActivity implements View.OnClickListene
 
                 adapter.AddThumbnail(new Thumbnail(thumbnail));
 
-                Glide.with(MainSeller.this).clear(loadingBar);
-                loadingBar.setEnabled(false);
+                productsLoaded++;
+                if (productsLoaded == amountOfProducts) {
+                    loadingBar.setAlpha(0f);
+
+                }
+
+
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -200,6 +215,7 @@ public class MainSeller extends AppCompatActivity implements View.OnClickListene
     @Override
     protected void onResume() {
         super.onResume();
+
         addProductBtn.setEnabled(true);
         myProductsBtn.setEnabled(true);
 

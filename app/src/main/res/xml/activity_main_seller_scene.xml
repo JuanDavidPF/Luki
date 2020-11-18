@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<MotionScene
+<MotionScene 
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:motion="http://schemas.android.com/apk/res-auto">
 
     <Transition
-        motion:constraintSetEnd="@+id/start"
-        motion:constraintSetStart="@id/end"
+        motion:constraintSetEnd="@+id/end"
+        motion:constraintSetStart="@id/start"
         motion:duration="1000">
        <KeyFrameSet>
        </KeyFrameSet>
@@ -22,12 +22,45 @@
             android:layout_marginStart="24dp"
             motion:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="16dp"
-            android:elevation="10dp" />
+            android:elevation="12dp" />
+        <Constraint
+            android:id="@+id/textView41"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintVertical_bias="0.13999999"
+            motion:layout_constraintTop_toBottomOf="@+id/mainSeller_LukiCredits"
+            motion:layout_constraintHorizontal_bias="0.66"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:visibility="invisible" />
+        <Constraint
+            android:id="@+id/textView42"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintVertical_bias="0.13999999"
+            motion:layout_constraintTop_toBottomOf="@+id/mainSeller_LukiCredits"
+            motion:layout_constraintHorizontal_bias="0.66"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:visibility="invisible" />
+        <Constraint
+            android:id="@+id/textView43"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintVertical_bias="0.13999999"
+            motion:layout_constraintTop_toBottomOf="@+id/mainSeller_LukiCredits"
+            motion:layout_constraintHorizontal_bias="0.66"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:visibility="invisible" />
     </ConstraintSet>
 
     <ConstraintSet android:id="@+id/end">
         <Constraint
-            android:id="@+id/mainSeller_tutorial_modal"
+            android:id="@+id/constraintLayout7"
             motion:layout_constraintEnd_toEndOf="parent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -36,10 +69,331 @@
             motion:layout_constraintTop_toTopOf="parent"
             motion:layout_constraintStart_toStartOf="parent"
             android:visibility="invisible" />
+        <Constraint
+            android:id="@+id/imageView27"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintVertical_bias="0.00999999"
+            motion:layout_constraintTop_toBottomOf="@+id/mainSeller_LukiCredits"
+            android:rotation="-179"
+            android:layout_marginStart="32dp"
+            motion:layout_constraintHorizontal_bias="0.0"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:visibility="invisible" />
+        <Constraint
+            android:id="@+id/textView40"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintVertical_bias="0.13999999"
+            motion:layout_constraintTop_toBottomOf="@+id/mainSeller_LukiCredits"
+            motion:layout_constraintHorizontal_bias="0.66"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:visibility="invisible" />
+        <Constraint
+            android:id="@+id/textView43"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintVertical_bias="0.13999999"
+            motion:layout_constraintTop_toBottomOf="@+id/mainSeller_LukiCredits"
+            motion:layout_constraintHorizontal_bias="0.66"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:visibility="invisible" />
+        <Constraint
+            android:id="@+id/textView42"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintVertical_bias="0.13999999"
+            motion:layout_constraintTop_toBottomOf="@+id/mainSeller_LukiCredits"
+            motion:layout_constraintHorizontal_bias="0.66"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:visibility="invisible" />
+        <Constraint
+            android:id="@+id/textView41"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintVertical_bias="0.13999999"
+            motion:layout_constraintTop_toBottomOf="@+id/mainSeller_LukiCredits"
+            motion:layout_constraintHorizontal_bias="0.66"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:visibility="invisible" />
+        <Constraint
+            android:id="@+id/mainSeller_RecyclerView"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="24dp"
+            motion:layout_constraintBottom_toTopOf="@+id/constraintLayout9"
+            android:layout_marginEnd="16dp"
+            motion:layout_constraintTop_toBottomOf="@+id/textView15"
+            android:layout_marginStart="16dp"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="16dp"
+            android:visibility="visible" />
+    </ConstraintSet>
+    <ConstraintSet
+        android:id="@+id/productContainer"
+        motion:deriveConstraintsFrom="@+id/start" >
+        <Constraint
+            android:id="@+id/constraintLayout7"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            android:alpha=".74"
+            motion:layout_constraintTop_toTopOf="parent"
+            motion:layout_constraintStart_toStartOf="parent" />
+        <Constraint
+            android:id="@+id/mainSeller_LukiCredits"
+            android:elevation="0dp"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            motion:layout_constraintTop_toBottomOf="@+id/textView9"
+            android:layout_marginStart="24dp"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="16dp" />
+        <Constraint
+            android:id="@+id/imageView27"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintVertical_bias="0.0"
+            motion:layout_constraintTop_toBottomOf="@+id/mainSeller_LukiCredits"
+            android:layout_marginStart="32dp"
+            motion:layout_constraintHorizontal_bias="0.0"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:scaleX="-1"
+            android:rotation="-71"
+            android:layout_marginTop="60dp" />
+        <Constraint
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintVertical_bias="0.26999998"
+            motion:layout_constraintTop_toBottomOf="@+id/mainSeller_LukiCredits"
+            motion:layout_constraintHorizontal_bias="0.66"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:id="@+id/textView40"
+            android:visibility="invisible" />
+        <Constraint
+            android:id="@+id/textView41"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintVertical_bias="0.26"
+            android:visibility="visible"
+            motion:layout_constraintTop_toBottomOf="@+id/mainSeller_LukiCredits"
+            motion:layout_constraintHorizontal_bias="0.66"
+            motion:layout_constraintStart_toStartOf="parent" />
+        <Constraint
+            android:id="@+id/textView15"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            motion:layout_constraintTop_toBottomOf="@+id/mainSeller_LukiCredits"
+            android:layout_marginStart="24dp"
+            motion:layout_constraintHorizontal_bias="0.0"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="32dp"
+            android:elevation="10dp" />
+        <Constraint
+            android:id="@+id/textView15"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            motion:layout_constraintTop_toBottomOf="@+id/mainSeller_LukiCredits"
+            android:layout_marginStart="24dp"
+            motion:layout_constraintHorizontal_bias="0.0"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="32dp"
+            android:elevation="10dp" />
+        <Constraint
+            android:id="@+id/textView15"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            motion:layout_constraintTop_toBottomOf="@+id/mainSeller_LukiCredits"
+            android:layout_marginStart="24dp"
+            motion:layout_constraintHorizontal_bias="0.0"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="32dp"
+            android:elevation="10dp" />
+        <Constraint
+            android:id="@+id/textView15"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            motion:layout_constraintTop_toBottomOf="@+id/mainSeller_LukiCredits"
+            android:layout_marginStart="24dp"
+            motion:layout_constraintHorizontal_bias="0.0"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="32dp"
+            android:elevation="120dp" />
+        <Constraint
+            android:id="@+id/textView15"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            motion:layout_constraintTop_toBottomOf="@+id/mainSeller_LukiCredits"
+            android:layout_marginStart="24dp"
+            motion:layout_constraintHorizontal_bias="0.0"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="32dp"
+            android:translationZ="20dp" />
     </ConstraintSet>
     <Transition
         motion:constraintSetStart="@+id/start"
-        motion:constraintSetEnd="@+id/end" >
+        motion:constraintSetEnd="@+id/productContainer"
+        motion:duration="100">
         <OnClick motion:targetId="@+id/mainSeller_LukiCredits" />
     </Transition>
+    <ConstraintSet
+        android:id="@+id/toMyOrders"
+        motion:deriveConstraintsFrom="@+id/productContainer" >
+        <Constraint
+            android:id="@+id/textView41"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintVertical_bias="0.26"
+            android:visibility="invisible"
+            motion:layout_constraintTop_toBottomOf="@+id/mainSeller_LukiCredits"
+            motion:layout_constraintHorizontal_bias="0.66"
+            motion:layout_constraintStart_toStartOf="parent" />
+        <Constraint
+            android:id="@+id/textView43"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintVertical_bias="0.69"
+            android:visibility="visible"
+            motion:layout_constraintTop_toBottomOf="@+id/mainSeller_LukiCredits"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:layout_marginBottom="32dp"
+            android:layout_marginStart="32dp"
+            motion:layout_constraintHorizontal_bias="0.0" />
+        <Constraint
+            android:id="@+id/textView15"
+            android:elevation="0dp"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            motion:layout_constraintTop_toBottomOf="@+id/mainSeller_LukiCredits"
+            android:layout_marginStart="24dp"
+            motion:layout_constraintHorizontal_bias="0.0"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="32dp" />
+        <Constraint
+            android:id="@+id/textView42"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintVertical_bias="0.13999999"
+            android:visibility="invisible"
+            motion:layout_constraintTop_toBottomOf="@+id/mainSeller_LukiCredits"
+            motion:layout_constraintHorizontal_bias="0.66"
+            motion:layout_constraintStart_toStartOf="parent" />
+        <Constraint
+            android:id="@+id/imageView27"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginStart="32dp"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="60dp"
+            android:scaleX="-1"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintVertical_bias="0.7"
+            motion:layout_constraintTop_toBottomOf="@+id/mainSeller_LukiCredits"
+            motion:layout_constraintHorizontal_bias="0.7"
+            android:visibility="visible"
+            android:rotation="110" />
+        <Constraint
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="24dp"
+            motion:layout_constraintStart_toStartOf="parent" />
+        <Constraint
+            android:id="@+id/constraintLayout9"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="24dp"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:elevation="10dp" />
+    </ConstraintSet>
+    <Transition
+        motion:constraintSetStart="@+id/productContainer"
+        motion:constraintSetEnd="@+id/toMyOrders" >
+        <OnClick motion:targetId="@+id/textView15" />
+    </Transition>
+    <Transition
+        motion:constraintSetStart="@+id/toMyOrders"
+        motion:constraintSetEnd="@+id/toMyProducts" >
+        <OnClick motion:targetId="@+id/mainSeller_imgBtn_myProducts" />
+    </Transition>
+    <ConstraintSet
+        android:id="@+id/toMyProducts"
+        motion:deriveConstraintsFrom="@+id/toMyOrders" >
+        <Constraint
+            android:id="@+id/textView43"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintVertical_bias="0.8"
+            android:visibility="invisible"
+            android:layout_marginBottom="32dp"
+            motion:layout_constraintTop_toBottomOf="@+id/mainSeller_LukiCredits"
+            android:layout_marginStart="32dp"
+            motion:layout_constraintHorizontal_bias="0.0"
+            motion:layout_constraintStart_toStartOf="parent" />
+        <Constraint
+            android:id="@+id/textView42"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintVertical_bias="0.55"
+            android:visibility="visible"
+            motion:layout_constraintTop_toBottomOf="@+id/mainSeller_LukiCredits"
+            motion:layout_constraintHorizontal_bias="1.0"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:layout_marginEnd="32dp" />
+        <Constraint
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:visibility="visible"
+            android:layout_marginStart="32dp"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="60dp"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintVertical_bias="0.7"
+            motion:layout_constraintTop_toBottomOf="@+id/mainSeller_LukiCredits"
+            android:id="@+id/imageView27"
+            android:rotation="173"
+            android:scaleY="-1"
+            motion:layout_constraintHorizontal_bias="0.25" />
+    </ConstraintSet>
 </MotionScene>

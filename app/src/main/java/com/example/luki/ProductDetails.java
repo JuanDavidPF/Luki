@@ -212,8 +212,7 @@ public class ProductDetails extends AppCompatActivity implements ThumbnailsAdapt
                 if (confirmation != null) {
                     try {
                         String paymentDetails = confirmation.toJSONObject().toString(4);
-                        startActivity(new Intent(this, CheckOut.class).putExtra("PaymentDetails", paymentDetails).putExtra("PaymentAmount", monto));
-
+                        startActivity(new Intent(this, CheckOut.class).putExtra("PaymentDetails", paymentDetails).putExtra("Product",product).putExtra("PaymentAmount", monto));
 
                     } catch (JSONException e) {
                         e.printStackTrace();

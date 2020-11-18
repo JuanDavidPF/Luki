@@ -37,6 +37,10 @@ public class ThumbnailsAdapter extends RecyclerView.Adapter<ThumbnailView> imple
         this.notifyDataSetChanged();
     }//closes AddThumbnail method
 
+    public void RestartAdapter() {
+
+        thumbnails.clear();
+    }
 
 
     @NonNull
