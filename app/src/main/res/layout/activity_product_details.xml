@@ -162,7 +162,7 @@
                 android:drawablePadding="20dp"
                 android:layout_marginTop="50dp"
                 android:background="@drawable/rounded_corners"
-                android:backgroundTint="@color/salmonLuki"
+                android:backgroundTint="@color/mustardLuki"
                 android:text="Comprar ahora"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"

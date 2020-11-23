@@ -2,7 +2,8 @@
 <resources>
     <color name="whiteLuki">#FFFFFF</color>
     <color name="purpleLuki">#6430A9</color>
-    <color name="salmonLuki">#FF715B</color>
+    <color name="mustardLuki">#FFC149</color>
+
     <color name="violetLuki">#A2A2FB</color>
     <color name="lightGrayLuki">#F5F5FA</color>
     <color name="mediumGrayLuki">#7878AB</color>

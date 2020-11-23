@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="64dp"
-        android:fontFamily="@font/poppins_bold"
+        android:fontFamily="@font/montserrat_bold"
         android:text="@string/catalogue"
         android:textColor="@color/purpleLuki"
         android:textSize="25sp"

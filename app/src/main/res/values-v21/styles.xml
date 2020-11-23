@@ -4,7 +4,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/whiteLuki</item>
         <item name="colorPrimaryDark">@color/violetLuki</item>
-        <item name="colorAccent">@color/salmonLuki</item>
+        <item name="colorAccent">@color/mustardLuki</item>
 
         <item name="android:windowFullscreen">true</item>
         <item name="windowNoTitle">true</item>

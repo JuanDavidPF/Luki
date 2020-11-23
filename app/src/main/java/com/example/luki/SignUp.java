@@ -3,27 +3,54 @@ package com.example.luki;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.motion.widget.MotionLayout;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.SparseArray;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.luki.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.vision.CameraSource;
+import com.google.android.gms.vision.Detector;
+import com.google.android.gms.vision.text.TextBlock;
+import com.google.android.gms.vision.text.TextRecognizer;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class SignUp extends AppCompatActivity implements View.OnClickListener {
+
+    ConstraintLayout cameraViewHolder;
+    SurfaceView cameraView;
+    TextView textScanned;
+    CameraSource cameraSource;
+    final int RequestCameraPermissionID = 1001;
 
 
     private FirebaseAuth mAuth;
@@ -39,12 +66,8 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
     private EditText nameField;
     private EditText lastNameField;
     private EditText birthDayField;
-    private EditText birthMonthField;
-    private EditText birthYearField;
     private EditText idCardField;
     private EditText expDayField;
-    private EditText expMonthField;
-    private EditText expYearfield;
     private EditText emailField;
     private EditText passField;
     private EditText repassField;
@@ -60,6 +83,37 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
     String id;
     User user;
 
+    final Calendar birthdayCalendar = Calendar.getInstance();
+    final Calendar expeditionCalendar = Calendar.getInstance();
+
+    DatePickerDialog.OnDateSetListener birthdayDate = new DatePickerDialog.OnDateSetListener() {
+
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear,
+                              int dayOfMonth) {
+            // TODO Auto-generated method stub
+            birthdayCalendar.set(Calendar.YEAR, year);
+            birthdayCalendar.set(Calendar.MONTH, monthOfYear);
+            birthdayCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            updateLabel(birthDayField, birthdayCalendar);
+        }
+    };
+
+    DatePickerDialog.OnDateSetListener expeditionDate = new DatePickerDialog.OnDateSetListener() {
+
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear,
+                              int dayOfMonth) {
+            // TODO Auto-generated method stub
+            expeditionCalendar.set(Calendar.YEAR, year);
+            expeditionCalendar.set(Calendar.MONTH, monthOfYear);
+            expeditionCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            updateLabel(expDayField, expeditionCalendar);
+        }
+
+    };
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,13 +128,10 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
         nameField = findViewById(R.id.signup_et_name);
         lastNameField = findViewById(R.id.signup_et_lastname);
-        birthDayField = findViewById(R.id.signup_editText_bd_dd);
-        birthMonthField = findViewById(R.id.signup_editText_bd_mm);
-        birthYearField = findViewById(R.id.signup_editText_bd_yyyy);
-        idCardField = findViewById(R.id.signup_et_cc);
+        birthDayField = findViewById(R.id.signup_editText_bd);
         expDayField = findViewById(R.id.signup_editText_expedition_day);
-        expMonthField = findViewById(R.id.signup_editText_expedition_month);
-        expYearfield = findViewById(R.id.signup_editText_expedition_year);
+
+        idCardField = findViewById(R.id.signup_et_cc);
         emailField = findViewById(R.id.sign_et_email);
         passField = findViewById(R.id.sign_et_pass);
         repassField = findViewById(R.id.sign_et_repass);
@@ -89,13 +140,118 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         typeOfUser = getIntent().getExtras().getString("typeOfUser");
         nextBtn.setOnClickListener(this);
         backBtn.setOnClickListener(this);
+        birthDayField.setOnClickListener(this);
+        expDayField.setOnClickListener(this);
 
+        CreateCameraScanner();
     }//closes onCreateMethod
+
+    private void updateLabel(EditText input, Calendar calendary) {
+        String myFormat = "MMMM - dd - yyyy"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.forLanguageTag("es-ES"));
+        input.setText(sdf.format(calendary.getTime()));
+
+    }
+
+    private void CreateCameraScanner() {
+        animation.transitionToState(R.id.cameraModal);
+        cameraViewHolder = findViewById(R.id.sign_camera);
+        cameraView = findViewById(R.id.signUpIDScanner);
+        textScanned = findViewById(R.id.sign_textScanned);
+
+        TextRecognizer textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
+        if (!textRecognizer.isOperational())
+            Log.w("SignUp", "Las dependencias del detector no está disponible");
+        else {
+            cameraSource = new CameraSource.Builder(getApplicationContext(), textRecognizer).setFacing(CameraSource.CAMERA_FACING_BACK).setRequestedPreviewSize(1280, 1024).setRequestedFps(2.0f).setAutoFocusEnabled(true).build();
+            cameraView.getHolder().addCallback(new SurfaceHolder.Callback() {
+                @Override
+                public void surfaceCreated(@NonNull SurfaceHolder holder) {
+
+                    try {
+                        if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                            ActivityCompat.requestPermissions(SignUp.this,
+                                    new String[]{Manifest.permission.CAMERA},
+                                    RequestCameraPermissionID);
+                            return;
+                        }
+                        cameraSource.start(cameraView.getHolder());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+                @Override
+                public void surfaceChanged(@NonNull SurfaceHolder holder, int format, int width, int height) {
+
+                }
+
+                @Override
+                public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
+                    cameraSource.stop();
+                }
+            });
+            textRecognizer.setProcessor(new Detector.Processor<TextBlock>() {
+                @Override
+                public void release() {
+
+                }
+
+                @Override
+                public void receiveDetections(Detector.Detections<TextBlock> detections) {
+
+                    final SparseArray<TextBlock> items = detections.getDetectedItems();
+                    if (items.size() != 0) {
+                        textScanned.post(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                for (int i = 0; i < items.size(); i++) {
+                                    TextBlock item = items.valueAt(i);
+
+                                    if (item.getValue().contains("NUMERO")) {
+
+                                        String cedula = item.getValue().substring(7, 20);
+                                        cedula = cedula.replace(".", "");
+                                        textScanned.setText(cedula);
+                                        idCardField.setText(cedula);
+                                        animation.transitionToState(R.id.end);
+                                        cameraSource.stop();
+
+                                        break;
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+
+        }
+    }//closes CreateCameraScanner method
 
     @Override
     public void onClick(View view) {
 
         switch ((view.getId())) {
+
+            case R.id.signup_editText_bd:
+
+
+                new DatePickerDialog(this, birthdayDate, birthdayCalendar
+                        .get(Calendar.YEAR), birthdayCalendar.get(Calendar.MONTH),
+                        birthdayCalendar.get(Calendar.DAY_OF_MONTH)).show();
+
+                break;
+
+
+            case R.id.signup_editText_expedition_day:
+                new DatePickerDialog(this, expeditionDate, expeditionCalendar
+                        .get(Calendar.YEAR), expeditionCalendar.get(Calendar.MONTH),
+                        expeditionCalendar.get(Calendar.DAY_OF_MONTH)).show();
+
+                break;
 
             case R.id.sign_btn_next:
 
@@ -187,8 +343,6 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                     idReference();
 
 
-
-
                 } else {
                     activateButtons();
                     Toast.makeText(SignUp.this, "Falló el registro en la base de datos " + task.getException().getLocalizedMessage(), Toast.LENGTH_LONG).show();
@@ -233,46 +387,63 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
     private boolean checkData() {
 
 
-        if (!isEmpty(nameField) && !isEmpty(lastNameField) && !isEmpty(idCardField) && !isEmpty(birthDayField) &&
-                !isEmpty(birthMonthField) && !isEmpty(birthYearField) && !isEmpty(expDayField) &&
-                !isEmpty(expMonthField) && !isEmpty(expYearfield) && !isEmpty(emailField) && !isEmpty(passField) && !isEmpty(repassField)) {
+        if (!isEmpty(nameField) && !isEmpty(lastNameField) && !isEmpty(idCardField) && !isEmpty(birthDayField) && !isEmpty(expDayField) && !isEmpty(emailField) && !isEmpty(passField) && !isEmpty(repassField)) {
 
             name = nameField.getText().toString().trim().toUpperCase() + " " + lastNameField.getText().toString().trim().toUpperCase();
             idCard = Integer.parseInt(idCardField.getText().toString().trim());
-            birthDate = birthDayField.getText().toString().trim() + birthMonthField.getText().toString().trim() + birthYearField.getText().toString().trim();
-            expDate = expDayField.getText().toString().trim() + expMonthField.getText().toString().trim() + expYearfield.getText().toString().trim();
+            birthDate = birthDayField.getText().toString();
+            expDate = expDayField.getText().toString();
             email = emailField.getText().toString().trim().toLowerCase();
             pass = passField.getText().toString();
             repass = repassField.getText().toString();
 
-            Log.e("<<<", birthDate + "");
-
             if (String.valueOf(idCard).length() == 10) {
-                if (birthDate.length() == 8) {
-                    if (expDate.length() == 8) {
-                        if (pass.equals(repass)) {
 
-                            return true;
-                        } else
-                            Toast.makeText(this.getApplicationContext(), "Las contraseñas no coinciden", Toast.LENGTH_LONG).show();
-                        return false;
-                    } else
-                        Toast.makeText(this.getApplicationContext(), "La fecha de expedición ingresada no es valida", Toast.LENGTH_LONG).show();
-                    return false;
+                if (pass.equals(repass)) {
+
+                    return true;
                 } else
-                    Toast.makeText(this.getApplicationContext(), "La fecha de nacimiento ingresada no es valida", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this.getApplicationContext(), "Las contraseñas no coinciden", Toast.LENGTH_LONG).show();
                 return false;
+
             } else
                 Toast.makeText(this.getApplicationContext(), "El documento de identidad ingresado no se valido", Toast.LENGTH_LONG).show();
             return false;
         } else
             Toast.makeText(this.getApplicationContext(), "Por favor complete todos los campos de registro", Toast.LENGTH_LONG).show();
         return false;
-    }//closes the createUser Method
+    }//closes createUser Method
 
     private boolean isEmpty(EditText etText) {
         return etText.getText().toString().trim().length() == 0;
-    }
+    }//closes isEmpty Method
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+
+            case RequestCameraPermissionID:
+
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                        return;
+                    }
+                    try {
+                        cameraSource.start(cameraView.getHolder());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                }
+        }
+    }//closes onRequestPermissionsResult Method
+
+    @Override
+    public void overridePendingTransition(int enterAnim, int exitAnim) {
+        super.overridePendingTransition(enterAnim, exitAnim);
+    }//closes overridePendingTransition Method
+
 
     private void deactivateButtons() {
         nextBtn.setEnabled(false);
@@ -288,4 +459,5 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         nextBtn.setEnabled(true);
 
     }
+
 }//closes SignUp class
