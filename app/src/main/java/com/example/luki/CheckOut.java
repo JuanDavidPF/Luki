@@ -1,14 +1,25 @@
 package com.example.luki;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.luki.model.Product;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,6 +32,10 @@ import java.util.Locale;
 import java.util.UUID;
 
 public class CheckOut extends AppCompatActivity implements View.OnClickListener {
+
+
+    private FirebaseAuth mAuth;
+    private DatabaseReference mDatabase;
 
     private Button returnBtn;
     private TextView payedAmount;
@@ -37,10 +52,14 @@ public class CheckOut extends AppCompatActivity implements View.OnClickListener 
 
     private String orderID;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_check_out);
+
+        mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
 
         payedAmount = findViewById(R.id.checkOut_finalAmount);
@@ -70,6 +89,9 @@ public class CheckOut extends AppCompatActivity implements View.OnClickListener 
         }
 
 
+
+
+
         returnBtn.setOnClickListener(this);
 
     }//closes OnCreate method
@@ -82,6 +104,7 @@ public class CheckOut extends AppCompatActivity implements View.OnClickListener 
         productPrice.setText("$" + monto);
         purchaseHour.setText(hour);
         purchaseDate.setText(date);
+        create();
     }//closes FillRecipe
 
 
@@ -120,6 +143,25 @@ public class CheckOut extends AppCompatActivity implements View.OnClickListener 
                 break;
 
         }
-
     }//closes onClick method
+
+    private void create() {
+
+        orderID = UUID.randomUUID().toString();
+
+        DatabaseReference orderBranch = mDatabase.child("orders").child(orderID);
+        DatabaseReference sellerBranch = mDatabase.child("users").child(product.getSeller_id());
+        DatabaseReference buyerBranch = mDatabase.child("users").child(mAuth.getCurrentUser().getUid());
+
+        orderBranch.child("product_id").setValue(product.getProduct_id());
+        orderBranch.child("seller_id").setValue(product.getSeller_id());
+        orderBranch.child("buyer_id").setValue(mAuth.getCurrentUser().getUid());
+        orderBranch.child("product_category").setValue(product.getProduct_category());
+        orderBranch.child("delivery_state").setValue("pending");
+
+        sellerBranch.child("products").child(product.getProduct_id()).child("orders").child(orderID).child("order_id").setValue(orderID);
+        buyerBranch.child("orders").child(orderID).child("order_id").setValue(orderID);
+    }//closes create method
+
+
 }//closes CheckOut class

@@ -227,4 +227,9 @@ public class ProductDetails extends AppCompatActivity implements ThumbnailsAdapt
     }//closes OnActivityResult method
 
 
+
+    private void CreateOrder(){
+
+    }//closes CreateOrder method
+
 }//closes ProductDetails class

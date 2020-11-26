@@ -7,6 +7,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +16,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -51,7 +53,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
     TextView textScanned;
     CameraSource cameraSource;
     final int RequestCameraPermissionID = 1001;
-
+    TextRecognizer textRecognizer;
 
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
@@ -143,7 +145,32 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         birthDayField.setOnClickListener(this);
         expDayField.setOnClickListener(this);
 
+        cameraViewHolder = findViewById(R.id.sign_camera);
+        cameraView = findViewById(R.id.signUpIDScanner);
+        textScanned = findViewById(R.id.sign_textScanned);
+
+
         CreateCameraScanner();
+        idCardField.setOnTouchListener(new View.OnTouchListener() {
+            @SuppressLint("MissingPermission")
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                final int DRAWABLE_LEFT = 0;
+                final int DRAWABLE_TOP = 1;
+                final int DRAWABLE_RIGHT = 2;
+                final int DRAWABLE_BOTTOM = 3;
+
+                if(event.getAction() == MotionEvent.ACTION_UP) {
+                    if(event.getRawX() >= (idCardField.getRight() - idCardField.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                        textScanned.setText("Enfoque su documento de identidad con la cámara");
+                        animation.transitionToState(R.id.cameraModal);
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+
     }//closes onCreateMethod
 
     private void updateLabel(EditText input, Calendar calendary) {
@@ -154,12 +181,8 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
     }
 
     private void CreateCameraScanner() {
-        animation.transitionToState(R.id.cameraModal);
-        cameraViewHolder = findViewById(R.id.sign_camera);
-        cameraView = findViewById(R.id.signUpIDScanner);
-        textScanned = findViewById(R.id.sign_textScanned);
-
         TextRecognizer textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
+
         if (!textRecognizer.isOperational())
             Log.w("SignUp", "Las dependencias del detector no está disponible");
         else {
@@ -217,7 +240,6 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                                         textScanned.setText(cedula);
                                         idCardField.setText(cedula);
                                         animation.transitionToState(R.id.end);
-                                        cameraSource.stop();
 
                                         break;
                                     }
