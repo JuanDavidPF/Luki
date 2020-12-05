@@ -174,13 +174,14 @@
             android:id="@+id/signup_et_cc"
             style="@style/InputextMain"
             android:layout_width="0dp"
-            android:drawableEnd="@drawable/camera_icon"
-
             android:layout_height="40dp"
+
             android:layout_marginTop="8dp"
             android:autofillHints=""
+            android:drawableEnd="@drawable/camera_icon"
             android:ems="10"
             android:inputType="number"
+            android:maxLength="10"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -410,8 +411,6 @@
                 android:background="@drawable/confirmation_vt_singledigit"
                 android:fontFamily="@font/poppins_regular"
                 android:gravity="center|center_horizontal"
-                android:paddingStart="20dp"
-                android:paddingEnd="10dp"
                 android:textSize="28sp" />
 
             <TextView
@@ -421,19 +420,6 @@
                 android:background="@drawable/confirmation_vt_singledigit"
                 android:fontFamily="@font/poppins_regular"
                 android:gravity="center|center_horizontal"
-                android:paddingStart="20dp"
-                android:paddingEnd="10dp"
-                android:textSize="28sp" />
-
-            <TextView
-                android:id="@+id/sign_vt_confirmation_4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/confirmation_vt_singledigit"
-                android:fontFamily="@font/poppins_regular"
-                android:gravity="center|center_horizontal"
-                android:paddingStart="20dp"
-                android:paddingEnd="10dp"
                 android:textSize="28sp" />
 
             <TextView
@@ -443,8 +429,15 @@
                 android:background="@drawable/confirmation_vt_singledigit"
                 android:fontFamily="@font/poppins_regular"
                 android:gravity="center|center_horizontal"
-                android:paddingStart="20dp"
-                android:paddingEnd="10dp"
+                android:textSize="28sp" />
+
+            <TextView
+                android:id="@+id/sign_vt_confirmation_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/confirmation_vt_singledigit"
+                android:fontFamily="@font/poppins_regular"
+                android:gravity="center|center_horizontal"
                 android:textSize="28sp" />
         </TableRow>
 

@@ -88,7 +88,11 @@ public class Store extends AppCompatActivity {
                 if (dataSnapshot.exists()) {
                     amountOfProduct = (int) dataSnapshot.getChildrenCount();
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        RepresentProducts(snapshot.getValue(Product.class));
+
+                        Product product = snapshot.getValue(Product.class);
+                        if (!productsAdapter.getProducts().contains(product))
+                            RepresentProducts(product);
+
                     }
                 }
             }
@@ -108,6 +112,7 @@ public class Store extends AppCompatActivity {
 
             @Override
             public void onSuccess(Uri thumbnail) {
+
                 productsAdapter.NewProduct(product, thumbnail);
                 productLoaded += 1;
 

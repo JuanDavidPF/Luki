@@ -112,7 +112,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
                     switch (userType) {
                         case "customer":
-                            toMain = new Intent(Login.this, Catalogue.class);
+                            toMain = new Intent(Login.this, MainCustomer.class);
                             break;
                         case "seller":
                             toMain = new Intent(Login.this, MainSeller.class);
@@ -124,7 +124,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                     preferences.edit().putString("user_type", userType).commit();
                     preferences.edit().putBoolean("isFirstTime", false).commit();
                     preferences.edit().putBoolean("hasFinishedTutorial", true).commit();
-
+                    toMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(toMain);
                     finish();
 
@@ -143,12 +143,13 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
         switch (resumePatameter) {
             case "customer":
-                resume = new Intent(Login.this, Catalogue.class);
+                resume = new Intent(Login.this, MainCustomer.class);
                 break;
             case "seller":
                 resume = new Intent(Login.this, MainSeller.class);
                 break;
         }
+        resume.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(resume);
         finish();
 

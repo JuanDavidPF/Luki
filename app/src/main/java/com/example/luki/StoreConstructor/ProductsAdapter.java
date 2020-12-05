@@ -36,6 +36,9 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductView> {
 
     }//closes NewProduct method
 
+    public ArrayList<Product> getProducts() {
+        return products;
+    }
 
     @NonNull
     @Override

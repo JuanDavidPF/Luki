@@ -155,7 +155,7 @@ public class MainSeller extends AppCompatActivity implements View.OnClickListene
         mDatabase.child("users").child(currentUser.getUid()).child("products").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                adapter.RestartAdapter();
+
                 if (dataSnapshot.exists()) {
                     noProducts.setAlpha(0);
                     loadingBar.setAlpha(1f);
@@ -184,7 +184,9 @@ public class MainSeller extends AppCompatActivity implements View.OnClickListene
             @Override
             public void onSuccess(Uri thumbnail) {
 
-                adapter.AddThumbnail(new Thumbnail(thumbnail));
+                Thumbnail thumb = new Thumbnail(thumbnail);
+                if (!adapter.getThumbnails().contains(thumb)) adapter.AddThumbnail(thumb);
+
 
                 productsLoaded++;
                 if (productsLoaded == amountOfProducts) {

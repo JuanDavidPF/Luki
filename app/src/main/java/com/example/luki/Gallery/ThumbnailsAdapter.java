@@ -31,17 +31,17 @@ public class ThumbnailsAdapter extends RecyclerView.Adapter<ThumbnailView> imple
 
     }//closes thumbnailsAdapter Constructor
 
+
+
     public void AddThumbnail(Thumbnail thumbnail) {
 
         thumbnails.add(thumbnail);
         this.notifyDataSetChanged();
     }//closes AddThumbnail method
 
-    public void RestartAdapter() {
-
-        thumbnails.clear();
+    public ArrayList<Thumbnail> getThumbnails() {
+        return thumbnails;
     }
-
 
     @NonNull
     @Override

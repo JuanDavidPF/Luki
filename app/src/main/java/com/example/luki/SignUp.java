@@ -9,6 +9,7 @@ import androidx.core.app.ActivityCompat;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -27,6 +28,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.luki.JSSE.MailSender;
 import com.example.luki.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -43,8 +45,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.Random;
 
 public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
@@ -81,6 +82,14 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
     private String email;
     private String pass;
     private String repass;
+
+    private String secretCode = "";
+    private String userScretCode = "";
+
+    private Button number1, number2, number3, number4, number5, number6, number7, number8, number9, number0;
+    private ImageButton deleteNumber;
+
+    private TextView confirmation1, confirmation2, confirmation3, confirmation4;
 
     String id;
     User user;
@@ -149,6 +158,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         cameraView = findViewById(R.id.signUpIDScanner);
         textScanned = findViewById(R.id.sign_textScanned);
 
+        CreateNumpad();
 
         CreateCameraScanner();
         idCardField.setOnTouchListener(new View.OnTouchListener() {
@@ -160,8 +170,8 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                 final int DRAWABLE_RIGHT = 2;
                 final int DRAWABLE_BOTTOM = 3;
 
-                if(event.getAction() == MotionEvent.ACTION_UP) {
-                    if(event.getRawX() >= (idCardField.getRight() - idCardField.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    if (event.getRawX() >= (idCardField.getRight() - idCardField.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                         textScanned.setText("Enfoque su documento de identidad con la cámara");
                         animation.transitionToState(R.id.cameraModal);
                         return true;
@@ -173,12 +183,99 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
     }//closes onCreateMethod
 
+    private void CreateNumpad() {
+
+        number0 = findViewById(R.id.register_numpad_0);
+        number1 = findViewById(R.id.register_numpad_1);
+        number2 = findViewById(R.id.register_numpad_2);
+        number3 = findViewById(R.id.register_numpad_3);
+        number4 = findViewById(R.id.register_numpad_4);
+        number5 = findViewById(R.id.register_numpad_5);
+        number6 = findViewById(R.id.register_numpad_6);
+        number7 = findViewById(R.id.register_numpad_7);
+        number8 = findViewById(R.id.register_numpad_8);
+        number9 = findViewById(R.id.register_numpad_9);
+        deleteNumber = findViewById(R.id.register_numpad_erase);
+
+        number0.setOnClickListener(this::EditCode);
+        number1.setOnClickListener(this::EditCode);
+        number2.setOnClickListener(this::EditCode);
+        number3.setOnClickListener(this::EditCode);
+        number4.setOnClickListener(this::EditCode);
+        number5.setOnClickListener(this::EditCode);
+        number6.setOnClickListener(this::EditCode);
+        number7.setOnClickListener(this::EditCode);
+        number8.setOnClickListener(this::EditCode);
+        number9.setOnClickListener(this::EditCode);
+        deleteNumber.setOnClickListener(this::EditCode);
+
+        confirmation1 = findViewById(R.id.sign_vt_confirmation_1);
+        confirmation2 = findViewById(R.id.sign_vt_confirmation_2);
+        confirmation3 = findViewById(R.id.sign_vt_confirmation_3);
+        confirmation4 = findViewById(R.id.sign_vt_confirmation_4);
+
+    }
+
     private void updateLabel(EditText input, Calendar calendary) {
         String myFormat = "MMMM - dd - yyyy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.forLanguageTag("es-ES"));
         input.setText(sdf.format(calendary.getTime()));
 
     }
+
+
+    private void EditCode(View v) {
+
+        if (v.getId() != R.id.register_numpad_erase && userScretCode.length() < 4) {
+            Button btn = (Button) v;
+
+            switch (userScretCode.length()) {
+
+                case 0:
+                    confirmation1.setText(btn.getText().toString().trim());
+                    break;
+
+                case 1:
+                    confirmation2.setText(btn.getText().toString().trim());
+                    break;
+
+                case 2:
+                    confirmation3.setText(btn.getText().toString().trim());
+                    break;
+
+                case 3:
+                    confirmation4.setText(btn.getText().toString().trim());
+                    break;
+            }
+
+            userScretCode += btn.getText().toString().trim();
+
+        } else if (v.getId() == R.id.register_numpad_erase && userScretCode.length()>0) {
+
+            switch (userScretCode.length()) {
+
+                case 1:
+                    confirmation1.setText("");
+                    break;
+
+                case 2:
+                    confirmation2.setText("");
+                    break;
+
+                case 3:
+                    confirmation3.setText("");
+                    break;
+
+                case 4:
+                    confirmation4.setText("");
+                    break;
+            }
+
+            userScretCode =  userScretCode.substring(0,userScretCode.length()-1);
+        }
+
+    }//closes EditCode method
+
 
     private void CreateCameraScanner() {
         TextRecognizer textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
@@ -287,18 +384,21 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
                     case R.id.secondPhase:
 
-                        animation.transitionToState(R.id.thirdPhase);
-
+                        if (checkData()) {
+                            animation.transitionToState(R.id.thirdPhase);
+                            SendCode(GenerateCode());
+                        }
                         break;
 
                     case R.id.thirdPhase:
 
                         //finishes the signUp
+                        if (secretCode.equals(userScretCode)) {
 
-                        if (checkData()) {
                             deactivateButtons();
                             registerUser();
-                        }
+                        } else
+                            Toast.makeText(this, "El código que ingresaste no coincide con el que enviamos a tu correo", Toast.LENGTH_LONG).show();
 
                         break;
                 }
@@ -333,6 +433,45 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         }//closes view switch
 
     }//closes onClick method
+
+    private String GenerateCode() {
+        String digit1 = String.valueOf(new Random().nextInt(10 - 0) + 0);
+        String digit2 = String.valueOf(new Random().nextInt(10 - 0) + 0);
+        String digit3 = String.valueOf(new Random().nextInt(10 - 0) + 0);
+        String digit4 = String.valueOf(new Random().nextInt(10 - 0) + 0);
+
+        secretCode = digit1 + digit2 + digit3 + digit4;
+
+        return secretCode;
+    }//closes GenerateCode method
+
+
+    private void SendCode(String code) {
+
+        final ProgressDialog dialog = new ProgressDialog(this);
+        dialog.setTitle("Sending Email");
+        dialog.setMessage("Please wait");
+        dialog.show();
+        Thread sender = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    MailSender sender = new MailSender("equipoluki@gmail.com", "Amnesia2018");
+                    sender.sendMail("Autentifica tu cuenta Luki",
+                            "Tu código de activación Luki es: " + secretCode,
+                            "equipoluki@gmail.com",
+                            email);
+                    dialog.dismiss();
+                } catch (Exception e) {
+                    Log.e("mylog", "Error: " + e.getMessage());
+                }
+            }
+        });
+        sender.start();
+
+
+    }//closes SendCode method
+
 
     private void registerUser() {
 
@@ -395,6 +534,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                     preferences.edit().putString("user_type", typeOfUser).commit();
                     preferences.edit().putBoolean("isFirstTime", false).commit();
                     preferences.edit().putBoolean("hasFinishedTutorial", false).commit();
+                    toMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(toMain);
                     finish();
 
@@ -412,14 +552,23 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         if (!isEmpty(nameField) && !isEmpty(lastNameField) && !isEmpty(idCardField) && !isEmpty(birthDayField) && !isEmpty(expDayField) && !isEmpty(emailField) && !isEmpty(passField) && !isEmpty(repassField)) {
 
             name = nameField.getText().toString().trim().toUpperCase() + " " + lastNameField.getText().toString().trim().toUpperCase();
-            idCard = Integer.parseInt(idCardField.getText().toString().trim());
+
+            try {
+                String idValue = idCardField.getText().toString();
+                idCard = Integer.parseInt(idValue);
+
+            } catch (NumberFormatException e) {
+                // handle the exception
+            }
+
+
             birthDate = birthDayField.getText().toString();
             expDate = expDayField.getText().toString();
             email = emailField.getText().toString().trim().toLowerCase();
             pass = passField.getText().toString();
             repass = repassField.getText().toString();
 
-            if (String.valueOf(idCard).length() == 10) {
+            if (String.valueOf(idCard).length() >= 8) {
 
                 if (pass.equals(repass)) {
 

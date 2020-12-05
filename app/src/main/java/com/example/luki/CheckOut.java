@@ -137,8 +137,9 @@ public class CheckOut extends AppCompatActivity implements View.OnClickListener 
 
             case R.id.checkOut_Btn_return:
 
-                Intent returnToCatalog = new Intent(this, Catalogue.class);
-                startActivity(returnToCatalog);
+                Intent returnToMain = new Intent(this, MainCustomer.class);
+                returnToMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(returnToMain);
                 finish();
                 break;
 
@@ -154,6 +155,7 @@ public class CheckOut extends AppCompatActivity implements View.OnClickListener 
         DatabaseReference buyerBranch = mDatabase.child("users").child(mAuth.getCurrentUser().getUid());
 
         orderBranch.child("product_id").setValue(product.getProduct_id());
+        orderBranch.child("purchase_date").setValue(date);
         orderBranch.child("seller_id").setValue(product.getSeller_id());
         orderBranch.child("buyer_id").setValue(mAuth.getCurrentUser().getUid());
         orderBranch.child("product_category").setValue(product.getProduct_category());

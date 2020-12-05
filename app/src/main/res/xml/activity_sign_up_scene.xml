@@ -187,16 +187,11 @@
     <Transition
         android:id="@+id/toThirdPhase"
         motion:constraintSetEnd="@+id/thirdPhase"
-        motion:constraintSetStart="@+id/secondPhase">
-        <OnClick />
-        <OnSwipe motion:dragDirection="dragLeft" />
-    </Transition>
+        motion:constraintSetStart="@+id/secondPhase"></Transition>
     <Transition
         android:id="@+id/backToSecondPhase"
         motion:constraintSetEnd="@+id/secondPhase"
-        motion:constraintSetStart="@+id/thirdPhase">
-        <OnSwipe motion:dragDirection="dragRight" />
-    </Transition>
+        motion:constraintSetStart="@+id/thirdPhase"></Transition>
     <Transition
         android:id="@+id/backToFirstPhase"
         motion:constraintSetEnd="@+id/end"
