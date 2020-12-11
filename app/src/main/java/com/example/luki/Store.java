@@ -94,6 +94,8 @@ public class Store extends AppCompatActivity {
                             RepresentProducts(product);
 
                     }
+                }else{
+                    animation.transitionToEnd();
                 }
             }
 

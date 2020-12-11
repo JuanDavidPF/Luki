@@ -220,19 +220,19 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/mainCustomer_catalogue_btn"
+        app:layout_constraintBottom_toTopOf="@+id/mainCustomer_seeMore_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView44" />
 
     <Button
-        android:id="@+id/mainCustomer_catalogue_btn"
+        android:id="@+id/mainCustomer_seeMore_btn"
         style="@style/ButtonMainSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
-        android:text="Catálogo"
+        android:text="Ver más"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

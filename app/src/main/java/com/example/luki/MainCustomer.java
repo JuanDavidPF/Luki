@@ -2,13 +2,16 @@ package com.example.luki;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -23,41 +26,49 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class MainCustomer extends AppCompatActivity {
+public class MainCustomer extends Fragment {
 
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
     private RecyclerView billsList;
     private LinearLayoutManager layoutManager;
     private BillsAdapter adapter;
-
-    private Button catalogueBtn;
     private int amountOfBills;
 
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_customer);
+    public static MainCustomer newInstance() {
+        MainCustomer fragment = new MainCustomer();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        return fragment;
+    }//closes newInstance method
+
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        // Inflate the layout for this fragment
+        View root = inflater.inflate(R.layout.activity_main_customer, container, false);
+
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
 
-        billsList = findViewById(R.id.main_customer_bill_list);
+        billsList = root.findViewById(R.id.main_customer_bill_list);
         billsList.setHasFixedSize(true);
 
-        layoutManager = new LinearLayoutManager(this,RecyclerView.VERTICAL,false);
+        layoutManager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
         billsList.setLayoutManager(layoutManager);
 
         adapter = new BillsAdapter();
         billsList.setAdapter(adapter);
 
-        catalogueBtn = findViewById(R.id.mainCustomer_catalogue_btn);
-        catalogueBtn.setOnClickListener(this::GoToCatalogue);
 
         GetBillsID();
 
-    }//closes OnCreate method
+        return root;
+    }//closes onCreateView method
+
+
 
     private void GetBillsID() {
 
@@ -95,7 +106,7 @@ public class MainCustomer extends AppCompatActivity {
                     String category = dataSnapshot.child("product_category").getValue(String.class);
                     String date = dataSnapshot.child("purchase_date").getValue(String.class);
 
-                    GetProductData(id, billID,category, date);
+                    GetProductData(id, billID, category, date);
                 }
             }
 
@@ -132,11 +143,6 @@ public class MainCustomer extends AppCompatActivity {
             }
         });//closes firebase retrieve
     }//closes GetProductData method
-
-    private void GoToCatalogue(View v) {
-        Intent goToCatalogue = new Intent(this, Catalogue.class);
-        startActivity(goToCatalogue);
-    }
 
 
 }//closes MainCustomer class

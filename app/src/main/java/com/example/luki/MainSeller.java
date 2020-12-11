@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.motion.widget.MotionLayout;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -13,7 +14,9 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -35,7 +38,8 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
-public class MainSeller extends AppCompatActivity implements View.OnClickListener, ThumbnailsAdapter.ThumbnailHandler {
+public class MainSeller extends Fragment implements View.OnClickListener, ThumbnailsAdapter.ThumbnailHandler {
+
 
     private MotionLayout animation;
 
@@ -64,20 +68,30 @@ public class MainSeller extends AppCompatActivity implements View.OnClickListene
     private boolean tutorialFinished;
 
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        SharedPreferences pref = this.getSharedPreferences("GLOBAL_PREFERENCES", Context.MODE_PRIVATE);
-        tutorialFinished = pref.getBoolean("hasFinishedTutorial", false);
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_seller);
+    public static MainSeller newInstance() {
+        MainSeller fragment = new MainSeller();
+        Bundle args = new Bundle();
 
-        animation = findViewById(R.id.mainSeller_animation);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View root = inflater.inflate(R.layout.activity_main_seller, container, false);
+
+        SharedPreferences pref = getActivity().getSharedPreferences("GLOBAL_PREFERENCES", Context.MODE_PRIVATE);
+        tutorialFinished = pref.getBoolean("hasFinishedTutorial", false);
+
+
+        animation = root.findViewById(R.id.mainSeller_animation);
         if (tutorialFinished) {
             animation.transitionToState(R.id.end);
         }
 
 
-        lukiCredits = findViewById(R.id.mainSeller_LukiCredits);
+        lukiCredits = root.findViewById(R.id.mainSeller_LukiCredits);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
@@ -86,36 +100,39 @@ public class MainSeller extends AppCompatActivity implements View.OnClickListene
 
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
-        addProductBtn = findViewById(R.id.mainSeller_imgBtn_addProduct);
-        myProductsBtn = findViewById(R.id.mainSeller_imgBtn_myProducts);
+        addProductBtn = root.findViewById(R.id.mainSeller_imgBtn_addProduct);
+        myProductsBtn = root.findViewById(R.id.mainSeller_imgBtn_myProducts);
 
         addProductBtn.setOnClickListener(this);
         myProductsBtn.setOnClickListener(this);
 
         myProducts = new ArrayList<ImageButton>();
 
-        productsContainer = findViewById(R.id.mainSeller_RecyclerView);
+        productsContainer = root.findViewById(R.id.mainSeller_RecyclerView);
         productsContainer.setHasFixedSize(true);
-        layoutManager = new GridLayoutManager(this, 3);
+        layoutManager = new GridLayoutManager(getActivity(), 3);
         productsContainer.setLayoutManager(layoutManager);
         adapter = new ThumbnailsAdapter(R.layout.my_products, R.id.myProducts_thumbnail);
         adapter.setObserver(this);
         productsContainer.setAdapter(adapter);
 
-        noProducts = findViewById(R.id.mainSeller_noProducsPanel);
+        noProducts = root.findViewById(R.id.mainSeller_noProducsPanel);
         noProducts.setAlpha(0);
 
-        loadingBar = findViewById(R.id.mainSeller_loadingBar);
+        loadingBar = root.findViewById(R.id.mainSeller_loadingBar);
         Glide.with(this).load(R.drawable.loading_gif).into(loadingBar);
-
+        loadingBar.setAlpha(0f);
 
         getMyProductsID();
 
 
-    }//closes onCreate method
+        return root;
+    }//closes onCreateView
+
 
     @Override
     public void onClick(View view) {
+
 
         switch (view.getId()) {
 
@@ -125,11 +142,11 @@ public class MainSeller extends AppCompatActivity implements View.OnClickListene
                 if (!tutorialFinished) {
                     animation.transitionToState(R.id.end);
                     tutorialFinished = true;
-                    SharedPreferences preferences = getSharedPreferences("GLOBAL_PREFERENCES", Context.MODE_PRIVATE);
+                    SharedPreferences preferences = getActivity().getSharedPreferences("GLOBAL_PREFERENCES", Context.MODE_PRIVATE);
                     preferences.edit().putBoolean("hasFinishedTutorial", true).apply();
                 }
 
-                Intent addProduct = new Intent(this, newProduct.class);
+                Intent addProduct = new Intent(getActivity(), newProduct.class);
                 startActivity(addProduct);
                 deactivateBtns();
                 break;
@@ -185,22 +202,21 @@ public class MainSeller extends AppCompatActivity implements View.OnClickListene
             public void onSuccess(Uri thumbnail) {
 
                 Thumbnail thumb = new Thumbnail(thumbnail);
-                if (!adapter.getThumbnails().contains(thumb)) adapter.AddThumbnail(thumb);
-
+                if (!adapter.getThumbnailsUris().contains(thumb.getThumbnailUri()))
+                    adapter.AddThumbnail(thumb);
 
                 productsLoaded++;
                 if (productsLoaded == amountOfProducts) {
                     loadingBar.setAlpha(0f);
-
+                    productsLoaded = 0;
                 }
-
 
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
                 // Handle any errors
-                Toast.makeText(MainSeller.this, exception.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), exception.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -215,7 +231,7 @@ public class MainSeller extends AppCompatActivity implements View.OnClickListene
 
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
 
         addProductBtn.setEnabled(true);

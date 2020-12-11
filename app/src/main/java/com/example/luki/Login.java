@@ -51,10 +51,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         currentUser = mAuth.getCurrentUser();
 
         if (currentUser != null) {
-
-            SharedPreferences pref = this.getSharedPreferences("GLOBAL_PREFERENCES", Context.MODE_PRIVATE);
-            String typeOfUser = pref.getString("user_type", null);
-            if (typeOfUser != null) resumeSession(typeOfUser);
+            resumeSession();
         }
     }//close onStartMethod
 
@@ -108,18 +105,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
                 if (task.isSuccessful()) {
 
-                    Intent toMain = new Intent();
-
-                    switch (userType) {
-                        case "customer":
-                            toMain = new Intent(Login.this, MainCustomer.class);
-                            break;
-                        case "seller":
-                            toMain = new Intent(Login.this, MainSeller.class);
-                            break;
-                    }
-
-
+                    Intent toMain = new Intent(Login.this, Home.class);
                     SharedPreferences preferences = getSharedPreferences("GLOBAL_PREFERENCES", Context.MODE_PRIVATE);
                     preferences.edit().putString("user_type", userType).commit();
                     preferences.edit().putBoolean("isFirstTime", false).commit();
@@ -138,17 +124,9 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
     }//closes logInUser
 
-    private void resumeSession(String resumePatameter) {
+    private void resumeSession() {
         Intent resume = new Intent();
-
-        switch (resumePatameter) {
-            case "customer":
-                resume = new Intent(Login.this, MainCustomer.class);
-                break;
-            case "seller":
-                resume = new Intent(Login.this, MainSeller.class);
-                break;
-        }
+        resume = new Intent(Login.this, Home.class);
         resume.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(resume);
         finish();

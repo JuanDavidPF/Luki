@@ -22,6 +22,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -91,6 +92,8 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
     private TextView confirmation1, confirmation2, confirmation3, confirmation4;
 
+    private CheckBox termsAndConditions;
+
     String id;
     User user;
 
@@ -157,6 +160,8 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         cameraViewHolder = findViewById(R.id.sign_camera);
         cameraView = findViewById(R.id.signUpIDScanner);
         textScanned = findViewById(R.id.sign_textScanned);
+
+        termsAndConditions = findViewById(R.id.terms_conditions_cb);
 
         CreateNumpad();
 
@@ -250,7 +255,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
             userScretCode += btn.getText().toString().trim();
 
-        } else if (v.getId() == R.id.register_numpad_erase && userScretCode.length()>0) {
+        } else if (v.getId() == R.id.register_numpad_erase && userScretCode.length() > 0) {
 
             switch (userScretCode.length()) {
 
@@ -271,7 +276,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                     break;
             }
 
-            userScretCode =  userScretCode.substring(0,userScretCode.length()-1);
+            userScretCode = userScretCode.substring(0, userScretCode.length() - 1);
         }
 
     }//closes EditCode method
@@ -571,8 +576,12 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
             if (String.valueOf(idCard).length() >= 8) {
 
                 if (pass.equals(repass)) {
-
-                    return true;
+                    if (termsAndConditions.isChecked())
+                        return true;
+                    else {
+                        Toast.makeText(this.getApplicationContext(), "Acepta los terminos y condiciones", Toast.LENGTH_LONG).show();
+                        return false;
+                    }
                 } else
                     Toast.makeText(this.getApplicationContext(), "Las contraseñas no coinciden", Toast.LENGTH_LONG).show();
                 return false;

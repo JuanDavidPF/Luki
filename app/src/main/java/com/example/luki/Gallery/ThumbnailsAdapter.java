@@ -43,6 +43,16 @@ public class ThumbnailsAdapter extends RecyclerView.Adapter<ThumbnailView> imple
         return thumbnails;
     }
 
+    public ArrayList<Uri> getThumbnailsUris() {
+        ArrayList<Uri> tempUris = new ArrayList<Uri>();
+
+        for (Thumbnail thumbnail: thumbnails) {
+            tempUris.add(thumbnail.getThumbnailUri());
+        }
+        
+        return tempUris;
+    }
+
     @NonNull
     @Override
     public ThumbnailView onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

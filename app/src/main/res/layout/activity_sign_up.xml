@@ -345,12 +345,12 @@
                 android:textAllCaps="false"
                 android:textColor="@color/mustardLuki"
                 android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="@+id/checkBox2"
-                app:layout_constraintStart_toEndOf="@+id/checkBox2"
-                app:layout_constraintTop_toTopOf="@+id/checkBox2" />
+                app:layout_constraintBottom_toBottomOf="@+id/terms_conditions_cb"
+                app:layout_constraintStart_toEndOf="@+id/terms_conditions_cb"
+                app:layout_constraintTop_toTopOf="@+id/terms_conditions_cb" />
 
             <CheckBox
-                android:id="@+id/checkBox2"
+                android:id="@+id/terms_conditions_cb"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:buttonTint="@color/purpleLuki"
